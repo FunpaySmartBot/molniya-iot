@@ -1,7 +1,7 @@
 {
   "name": "Molniya IoT Control",
   "short_name": "Molniya IoT",
-  "description": "Custom BLE controller and telemetry dashboard for Ninebot SNSC 2.3 Molniya IoT",
+  "description": "Custom BLE controller and telemetry dashboard for Ninebot SNSC 2.3 Molniya IoT Made by @Sirn8ki on tg",
   "start_url": "/molniya-iot/",
   "scope": "/molniya-iot/",
   "display": "standalone",
