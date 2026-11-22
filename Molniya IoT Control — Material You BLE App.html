@@ -1,0 +1,1269 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0F0E13" />
+  <title>Molniya IoT Control</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* Основные дизайн-токены Material You Dark */
+    :root {
+      --bg-obsidian: #0F0E13;
+      --surface-1: #18171F;
+      --surface-2: #22202B;
+      --surface-3: #2B2836;
+      --primary: #9B8AFB;
+      --primary-hover: #ABA0FC;
+      --primary-tonal: rgba(155, 138, 251, 0.14);
+      --text-main: #EFEDF6;
+      --text-muted: #8E8A9E;
+      --border-subtle: #2A2835;
+      --emerald: #4ADE80;
+      --emerald-tonal: rgba(74, 222, 128, 0.14);
+      --coral: #F87171;
+      --coral-tonal: rgba(248, 113, 113, 0.14);
+      --amber: #FBBF24;
+      --amber-tonal: rgba(251, 191, 36, 0.14);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      background-color: var(--bg-obsidian);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding-bottom: 84px;
+      overflow-x: hidden;
+    }
+
+    .font-mono-code {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+    }
+
+    /* Карточки и поверхности */
+    .m3-card {
+      background-color: var(--surface-1);
+      border: 1px solid var(--border-subtle);
+      border-radius: 22px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .m3-tile {
+      background-color: var(--surface-2);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .m3-tile:active {
+      transform: scale(0.97);
+    }
+
+    .m3-btn-primary {
+      background-color: var(--primary);
+      color: #12101C;
+      font-weight: 600;
+      border-radius: 16px;
+      transition: transform 0.1s ease, background-color 0.15s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 18px rgba(155, 138, 251, 0.22);
+    }
+
+    .m3-btn-primary:active {
+      transform: scale(0.97);
+      background-color: var(--primary-hover);
+    }
+
+    .m3-btn-tonal {
+      background-color: var(--primary-tonal);
+      color: #C8BFFD;
+      border: 1px solid rgba(155, 138, 251, 0.18);
+      border-radius: 16px;
+      font-weight: 500;
+      transition: transform 0.1s ease, background-color 0.15s ease;
+    }
+
+    .m3-btn-tonal:active {
+      transform: scale(0.97);
+      background-color: rgba(155, 138, 251, 0.22);
+    }
+
+    /* Кастомные RGB ползунки Material You */
+    input[type="range"].rgb-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"].rgb-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #EFEDF6;
+      border: 3px solid var(--surface-1);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+      transition: transform 0.12s ease;
+    }
+
+    input[type="range"].rgb-slider:active::-webkit-slider-thumb {
+      transform: scale(1.18);
+    }
+
+    /* Кастомный Switch */
+    .m3-switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 26px;
+      flex-shrink: 0;
+    }
+
+    .m3-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .m3-switch-track {
+      position: absolute;
+      cursor: pointer;
+      inset: 0;
+      background-color: var(--surface-3);
+      border: 1px solid #3B374A;
+      transition: 0.2s;
+      border-radius: 999px;
+    }
+
+    .m3-switch-track:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: var(--text-muted);
+      transition: 0.2s cubic-bezier(0.2, 0, 0, 1);
+      border-radius: 50%;
+    }
+
+    .m3-switch input:checked + .m3-switch-track {
+      background-color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .m3-switch input:checked + .m3-switch-track:before {
+      transform: translateX(20px);
+      background-color: #12101C;
+    }
+
+    /* Поля ввода */
+    .m3-input {
+      background-color: var(--bg-obsidian);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-size: 13.5px;
+      width: 100%;
+      outline: none;
+      transition: border-color 0.15s ease;
+    }
+
+    .m3-input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Вкладки */
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Терминал логов */
+    .terminal-box {
+      background-color: #0B0A0E;
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 12px;
+      height: 310px;
+      overflow-y: auto;
+      font-size: 11px;
+      line-height: 1.55;
+    }
+
+    /* Тост уведомление вместо alert() */
+    #toastBanner {
+      position: fixed;
+      top: 72px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-16px);
+      background-color: var(--surface-3);
+      color: var(--text-main);
+      border: 1px solid rgba(155, 138, 251, 0.35);
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 60;
+      white-space: nowrap;
+      max-width: 92vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #toastBanner.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Всплывающий тост -->
+  <div id="toastBanner"></div>
+
+  <!-- Верхняя панель навигации -->
+  <header class="sticky top-0 z-30 bg-[#0F0E13]/90 backdrop-blur-md border-b border-[#2A2835] px-4 py-3.5">
+    <div class="max-w-md mx-auto flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-[#9B8AFB]/15 border border-[#9B8AFB]/30 flex items-center justify-center text-[#9B8AFB]">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+          </svg>
+        </div>
+        <div>
+          <h1 id="pageTitle" class="text-[18px] font-semibold tracking-tight leading-none">Control</h1>
+          <span class="text-[11px] text-[#8E8A9E]">SNSC 2.3 • Molniya IoT</span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <!-- Индикатор сигнала RSSI -->
+        <div id="rssiIndicator" class="hidden items-end gap-[2px] h-3.5 px-2 py-1 rounded-full bg-[#22202B] border border-[#2A2835]" title="BLE Signal">
+          <span class="w-[2.5px] h-1.5 bg-[#4ADE80] rounded-full"></span>
+          <span class="w-[2.5px] h-2 bg-[#4ADE80] rounded-full"></span>
+          <span class="w-[2.5px] h-2.5 bg-[#4ADE80] rounded-full"></span>
+          <span class="w-[2.5px] h-3 bg-[#8E8A9E]/40 rounded-full"></span>
+        </div>
+        <!-- Статус подключения -->
+        <span id="connPill" class="text-[11.5px] font-medium px-3 py-1 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835] flex items-center gap-1.5">
+          <span id="connDot" class="w-1.5 h-1.5 rounded-full bg-[#8E8A9E]"></span>
+          <span id="connText">Disconnected</span>
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-md mx-auto px-3.5 pt-3.5">
+
+    <!-- ==================== ВКЛАДКА 1: CONTROL ==================== -->
+    <section id="tab-control" class="tab-pane active">
+
+      <!-- Карточка подключения и BLE-ключа -->
+      <div class="m3-card">
+        <div class="flex items-start justify-between mb-3">
+          <div>
+            <div id="deviceTitle" class="text-[15px] font-semibold text-[#EFEDF6]">Molniya IoT Module</div>
+            <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+              <span id="authStatusPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]">
+                Auth: Pending
+              </span>
+              <span id="deckLatchPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20">
+                Deck: Closed
+              </span>
+            </div>
+          </div>
+          <button onclick="switchTab('iot', 'IoT & Keys', document.querySelectorAll('nav button')[2])" class="p-2 rounded-xl bg-[#22202B] text-[#8E8A9E] hover:text-[#EFEDF6] border border-[#2A2835]" title="BLE Key Settings">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="scanAndConnect()" class="m3-btn-primary py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M7 7l10 10-5 5V2l5 5L7 17"/>
+            </svg>
+            Scan & Connect
+          </button>
+          <button onclick="sendHandshake()" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+              <path d="M16 16h5v5"/>
+            </svg>
+            Re-handshake
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between mt-3.5 pt-3 border-t border-[#2A2835]">
+          <span class="text-[12px] text-[#8E8A9E]">Показывать все BLE-устройства рядом</span>
+          <label class="m3-switch">
+            <input type="checkbox" id="scanAllSwitch" />
+            <span class="m3-switch-track"></span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Блок Lock & Accessories -->
+      <div class="m3-card">
+        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">Lock & Deck Solenoid</div>
+        <div class="grid grid-cols-2 gap-2.5 mb-2.5">
+          <button onclick="handleUnlock()" class="m3-btn-primary py-3.5 px-3 text-[14px] flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+            </svg>
+            Unlock
+          </button>
+          <button onclick="handleLock()" class="m3-tile py-3.5 px-3 text-[14px] font-medium text-[#EFEDF6] flex items-center justify-center gap-2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+            Lock
+          </button>
+        </div>
+
+        <!-- 2x2 Аксессуары -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="openBatteryCover()" class="m3-tile p-3 flex items-center gap-3 text-left">
+            <div class="w-9 h-9 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="6" y="4" width="12" height="18" rx="2"/>
+                <line x1="10" y1="2" x2="14" y2="2"/>
+                <path d="M12 10v6"/>
+                <path d="M9 13h6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-[13px] font-medium text-[#EFEDF6]">Battery cover</div>
+              <div class="text-[10.5px] text-[#8E8A9E]">Замок деки S90L</div>
+            </div>
+          </button>
+
+          <button onclick="sendCmd(0x04, '01', 'Find / Horn Buzzer')" class="m3-tile p-3 flex items-center gap-3 text-left">
+            <div class="w-9 h-9 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-[13px] font-medium text-[#EFEDF6]">Find / horn</div>
+              <div class="text-[10.5px] text-[#8E8A9E]">Зуммер трекера</div>
+            </div>
+          </button>
+
+          <button onclick="sendCmd(0x03, '01', 'Headlight ON')" class="m3-tile p-3 flex items-center gap-3 text-left">
+            <div class="w-9 h-9 rounded-xl bg-[#FBBF24]/15 text-[#FBBF24] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
+                <path d="M9 18h6"/>
+                <path d="M10 22h4"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-[13px] font-medium text-[#EFEDF6]">Light on</div>
+              <div class="text-[10.5px] text-[#8E8A9E]">Включить фару</div>
+            </div>
+          </button>
+
+          <button onclick="sendCmd(0x03, '00', 'Headlight OFF')" class="m3-tile p-3 flex items-center gap-3 text-left">
+            <div class="w-9 h-9 rounded-xl bg-[#8E8A9E]/15 text-[#8E8A9E] flex items-center justify-center shrink-0">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="2" y1="2" x2="22" y2="22"/>
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 9.33 2.86"/>
+                <path d="M9 18h6"/>
+                <path d="M10 22h4"/>
+              </svg>
+            </div>
+            <div>
+              <div class="text-[13px] font-medium text-[#EFEDF6]">Light off</div>
+              <div class="text-[10.5px] text-[#8E8A9E]">Выключить фару</div>
+            </div>
+          </button>
+        </div>
+      </div>
+
+      <!-- Блок Colour Light (IoT RGB Подсветка) -->
+      <div class="m3-card">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Colour light (IoT LED)</span>
+          <span id="rgbReadout" class="font-mono-code text-[11px] text-[#8E8A9E]">RGB(155, 138, 251)</span>
+        </div>
+
+        <div class="flex items-center gap-3 mb-3.5 bg-[#121117] p-2.5 rounded-2xl border border-[#2A2835]">
+          <div id="colorSwatch" class="w-10 h-10 rounded-xl shrink-0 border border-white/10 transition-colors" style="background-color: #9B8AFB; box-shadow: 0 0 16px rgba(155, 138, 251, 0.45);"></div>
+          <div class="flex-1">
+            <div id="hexValueLabel" class="font-mono-code text-[14px] font-semibold text-[#EFEDF6]">#9B8AFB</div>
+            <div class="text-[11px] text-[#8E8A9E]">Подсветка модуля Молния</div>
+          </div>
+          <!-- Быстрые пресеты -->
+          <div class="flex gap-1.5">
+            <button onclick="setPresetColor(0, 175, 255)" class="w-6 h-6 rounded-full bg-[#00AFFF] border border-white/20" title="Lite Blue"></button>
+            <button onclick="setPresetColor(155, 138, 251)" class="w-6 h-6 rounded-full bg-[#9B8AFB] border border-white/20" title="Lavender"></button>
+            <button onclick="setPresetColor(74, 222, 128)" class="w-6 h-6 rounded-full bg-[#4ADE80] border border-white/20" title="Emerald"></button>
+          </div>
+        </div>
+
+        <!-- Слайдеры R, G, B -->
+        <div class="space-y-3 mb-3.5">
+          <div class="flex items-center gap-3">
+            <span class="font-mono-code text-[12px] font-bold text-[#F87171] w-3">R</span>
+            <input type="range" id="sliderR" class="rgb-slider" min="0" max="255" value="155" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #F87171);" />
+            <span id="valR" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">155</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono-code text-[12px] font-bold text-[#4ADE80] w-3">G</span>
+            <input type="range" id="sliderG" class="rgb-slider" min="0" max="255" value="138" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #4ADE80);" />
+            <span id="valG" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">138</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="font-mono-code text-[12px] font-bold text-[#60A5FA] w-3">B</span>
+            <input type="range" id="sliderB" class="rgb-slider" min="0" max="255" value="251" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #60A5FA);" />
+            <span id="valB" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">251</span>
+          </div>
+        </div>
+
+        <!-- Режимы свечения -->
+        <div class="text-[11.5px] text-[#8E8A9E] mb-2">Mode</div>
+        <div class="grid grid-cols-3 gap-2 mb-3">
+          <button id="ledMode0" onclick="selectLedMode(0)" class="py-2 rounded-xl text-[12.5px] font-semibold bg-[#9B8AFB] text-[#12101C]">Solid</button>
+          <button id="ledMode1" onclick="selectLedMode(1)" class="m3-tile py-2 rounded-xl text-[12.5px] font-medium text-[#8E8A9E]">Breathe</button>
+          <button id="ledMode2" onclick="selectLedMode(2)" class="m3-tile py-2 rounded-xl text-[12.5px] font-medium text-[#8E8A9E]">Flash</button>
+        </div>
+
+        <button onclick="applyColourCommand()" class="m3-btn-primary w-full py-3 text-[13.5px] flex items-center justify-center gap-2">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+          </svg>
+          Apply colour
+        </button>
+      </div>
+
+      <!-- Питание ESC и SHFW Профили -->
+      <div class="m3-card">
+        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">Power & SHFW Profile</div>
+        <div class="grid grid-cols-2 gap-2.5 mb-3">
+          <button onclick="sendCmd(0x02, '01', 'Power ON')" class="py-3 px-3 rounded-2xl bg-[#4ADE80]/12 border border-[#4ADE80]/25 text-[#4ADE80] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+              <line x1="12" y1="2" x2="12" y2="12"/>
+            </svg>
+            Power on
+          </button>
+          <button onclick="sendCmd(0x02, '00', 'Power OFF')" class="py-3 px-3 rounded-2xl bg-[#F87171]/12 border border-[#F87171]/25 text-[#F87171] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+              <line x1="12" y1="2" x2="12" y2="12"/>
+            </svg>
+            Power off
+          </button>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2">
+          <button onclick="setSpeedProfile(1, 'Eco 20 km/h')" class="m3-tile py-2.5 px-2 text-center">
+            <div class="text-[12px] font-semibold text-[#EFEDF6]">Eco</div>
+            <div class="text-[10px] text-[#8E8A9E]">20 km/h</div>
+          </button>
+          <button onclick="setSpeedProfile(2, 'Drive 25 km/h')" class="m3-tile py-2.5 px-2 text-center">
+            <div class="text-[12px] font-semibold text-[#EFEDF6]">Drive</div>
+            <div class="text-[10px] text-[#8E8A9E]">25 km/h</div>
+          </button>
+          <button onclick="setSpeedProfile(3, 'SHFW Sport 35+ km/h')" class="m3-btn-tonal py-2.5 px-2 text-center">
+            <div class="text-[12px] font-semibold">SHFW</div>
+            <div class="text-[10px] opacity-80">35+ km/h</div>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== ВКЛАДКА 2: TELEMETRY ==================== -->
+    <section id="tab-telemetry" class="tab-pane">
+
+      <!-- Карточка батареи -->
+      <div class="m3-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[13px] font-medium text-[#8E8A9E]">Battery Pack (10S BMS)</span>
+          <span id="telBatteryPct" class="text-[20px] font-bold text-[#4ADE80]">84%</span>
+        </div>
+        <div class="w-full h-2.5 bg-[#0F0E13] rounded-full overflow-hidden border border-[#2A2835]">
+          <div id="telBatteryBar" class="h-full rounded-full transition-all duration-300" style="width: 84%; background: linear-gradient(90deg, #9B8AFB, #4ADE80);"></div>
+        </div>
+        <div class="flex justify-between text-[11px] text-[#8E8A9E] mt-2">
+          <span>Temp: <strong id="telTemp" class="text-[#EFEDF6] font-normal">24.5 °C</strong></span>
+          <span>Current: <strong id="telAmp" class="text-[#EFEDF6] font-normal">0.0 A</strong></span>
+        </div>
+      </div>
+
+      <!-- Сетка 2x2 ключевых показателей -->
+      <div class="grid grid-cols-2 gap-2.5 mb-3">
+        <div class="m3-card !mb-0">
+          <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
+            <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+            </span>
+            Speed
+          </div>
+          <div id="telSpeed" class="text-[22px] font-bold tracking-tight">0.0 <span class="text-[13px] font-normal text-[#8E8A9E]">km/h</span></div>
+        </div>
+
+        <div class="m3-card !mb-0">
+          <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
+            <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </span>
+            Est. Range
+          </div>
+          <div id="telRange" class="text-[22px] font-bold tracking-tight">34.2 <span class="text-[13px] font-normal text-[#8E8A9E]">km</span></div>
+        </div>
+
+        <div class="m3-card !mb-0">
+          <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
+            <span class="w-7 h-7 rounded-lg bg-[#FBBF24]/15 text-[#FBBF24] flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            </span>
+            Voltage
+          </div>
+          <div id="telVoltage" class="text-[22px] font-bold tracking-tight">40.65 <span class="text-[13px] font-normal text-[#8E8A9E]">V</span></div>
+        </div>
+
+        <div class="m3-card !mb-0">
+          <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
+            <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+            </span>
+            Mode
+          </div>
+          <div id="telModeLabel" class="text-[20px] font-bold tracking-tight text-[#9B8AFB]">SHFW 3</div>
+        </div>
+      </div>
+
+      <!-- Список статусов -->
+      <div class="m3-card divide-y divide-[#2A2835]">
+        <div class="flex justify-between py-2.5 text-[13.5px]">
+          <span class="text-[#8E8A9E]">Lock status</span>
+          <span id="telLockState" class="font-semibold text-[#4ADE80]">Unlocked</span>
+        </div>
+        <div class="flex justify-between py-2.5 text-[13.5px]">
+          <span class="text-[#8E8A9E]">Deck cover switch</span>
+          <span id="telDeckState" class="font-medium text-[#EFEDF6]">Closed (OK)</span>
+        </div>
+        <div class="flex justify-between py-2.5 text-[13.5px]">
+          <span class="text-[#8E8A9E]">Session trip</span>
+          <span id="telTrip" class="font-mono-code font-medium text-[#EFEDF6]">4.82 km</span>
+        </div>
+        <div class="flex justify-between py-2.5 text-[13.5px]">
+          <span class="text-[#8E8A9E]">IoT / ESC Firmware</span>
+          <span class="font-mono-code font-medium text-[#EFEDF6]">1.0.4-custom / SHFW</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2.5">
+        <button onclick="sendCmd(0x31, '00', 'Refresh Telemetry')" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+          Refresh
+        </button>
+        <button id="demoSimBtn" onclick="toggleDemoSimulation()" class="m3-tile py-3 px-3 text-[13.5px] font-medium text-[#EFEDF6] flex items-center justify-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span id="demoSimLabel">Demo Ride: OFF</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ==================== ВКЛАДКА 3: IOT & BLE KEYS ==================== -->
+    <section id="tab-iot" class="tab-pane">
+
+      <!-- Активный BLE-ключ -->
+      <div class="m3-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Active BLE Auth Key</span>
+          <span class="font-mono-code text-[11px] text-[#9B8AFB]">8-BYTE HEX</span>
+        </div>
+
+        <div class="relative mb-3">
+          <input type="password" id="activeKeyInput" maxlength="16" class="m3-input font-mono-code pr-10 tracking-wider" placeholder="1122334455667788" />
+          <button onclick="toggleKeyVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8A9E] hover:text-[#EFEDF6] p-1" title="Show/Hide Key">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="saveActiveKey()" class="m3-btn-tonal py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+            Save in App
+          </button>
+          <button onclick="sendHandshake()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            Verify Key
+          </button>
+        </div>
+      </div>
+
+      <!-- Смена BLE-ключа на модуле Молния -->
+      <div class="m3-card">
+        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2">Rotate Key on Molniya IoT</div>
+        <input type="text" id="newKeyInput" maxlength="16" class="m3-input font-mono-code mb-3 tracking-wider uppercase" placeholder="AABBCCDDEEFF0011" />
+
+        <div class="grid grid-cols-2 gap-2.5 mb-2.5">
+          <button onclick="generateRandomKey()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
+            Generate
+          </button>
+          <button onclick="writeNewKeyToIoT()" class="m3-btn-primary py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+            Write Key (0xC4)
+          </button>
+        </div>
+        <p class="text-[11px] text-[#8E8A9E] leading-relaxed">
+          Записывает новый 64-битный ключ в энергонезависимую память трекера. Без этого ключа сторонние BLE-сканеры не смогут управлять замком и питанием.
+        </p>
+      </div>
+
+      <!-- OTA Firmware Update -->
+      <div class="m3-card">
+        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">OTA Firmware Update</div>
+        <div class="flex items-center gap-3 p-3 rounded-2xl bg-[#121117] border border-[#2A2835] mb-3">
+          <div class="w-10 h-10 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div id="otaFileName" class="text-[13px] font-medium text-[#EFEDF6] truncate">No firmware selected</div>
+            <div id="otaFileSize" class="text-[11px] text-[#8E8A9E]">Pick a compiled .bin image</div>
+          </div>
+        </div>
+
+        <input type="file" id="otaFileInput" accept=".bin" class="hidden" onchange="handleOtaFileSelect(event)" />
+        <div class="grid grid-cols-2 gap-2.5">
+          <button onclick="document.getElementById('otaFileInput').click()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+            Choose .bin
+          </button>
+          <button onclick="startOtaFlash()" class="m3-btn-tonal py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            Flash OTA
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ==================== ВКЛАДКА 4: CONSOLE & LOGS ==================== -->
+    <section id="tab-console" class="tab-pane">
+
+      <!-- Отправка кастомного HEX-пакета -->
+      <div class="m3-card">
+        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">Custom Command</div>
+        <div class="grid grid-cols-3 gap-2 mb-2.5">
+          <div>
+            <label class="block text-[10.5px] text-[#8E8A9E] mb-1">Command (Hex)</label>
+            <input type="text" id="cmdOpcodeInput" class="m3-input font-mono-code text-center uppercase" value="31" maxlength="2" />
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[10.5px] text-[#8E8A9E] mb-1">Payload (Hex)</label>
+            <input type="text" id="cmdPayloadInput" class="m3-input font-mono-code uppercase" value="00" placeholder="01 02..." />
+          </div>
+        </div>
+
+        <!-- Быстрый выбор опкодов -->
+        <div class="flex flex-wrap gap-1.5 mb-3">
+          <button onclick="fillOpcode('01', '01')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x01 Unlock</button>
+          <button onclick="fillOpcode('05', '01')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x05 Cover</button>
+          <button onclick="fillOpcode('30', '9B8AFB00')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x30 RGB</button>
+          <button onclick="fillOpcode('31', '00')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x31 Info</button>
+          <button onclick="fillOpcode('C0', '1122334455667788')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0xC0 Auth</button>
+        </div>
+
+        <button onclick="sendManualCommand()" class="m3-btn-primary w-full py-2.5 text-[13.5px] flex items-center justify-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Send command
+        </button>
+      </div>
+
+      <!-- Терминал логирования -->
+      <div class="m3-card">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Session Log</span>
+          <div class="flex items-center gap-1.5">
+            <button onclick="copyAllLogs()" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] text-[#EFEDF6] border border-[#2A2835]">Copy</button>
+            <button onclick="clearAllLogs()" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] text-[#F87171] border border-[#2A2835]">Clear</button>
+          </div>
+        </div>
+
+        <!-- Фильтры логов -->
+        <div class="flex gap-1.5 mb-2.5 overflow-x-auto pb-1">
+          <button onclick="setLogFilter('ALL', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#9B8AFB] text-[#12101C]">All</button>
+          <button onclick="setLogFilter('BLE', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">BLE / Auth</button>
+          <button onclick="setLogFilter('IO', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">TX / RX</button>
+          <button onclick="setLogFilter('BTN', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">Buttons</button>
+        </div>
+
+        <div id="terminalOutput" class="terminal-box font-mono-code"></div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- Нижняя панель навигации Material You -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#18171F]/95 backdrop-blur-md border-t border-[#2A2835] px-2 py-1.5">
+    <div class="max-w-md mx-auto grid grid-cols-4 gap-1">
+      <button onclick="switchTab('control', 'Control', this)" class="nav-btn active flex flex-col items-center justify-center py-1 text-[#9B8AFB]">
+        <div class="nav-pill px-4 py-1 rounded-full bg-[#9B8AFB]/16 mb-0.5 transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        </div>
+        <span class="text-[11px] font-semibold">Control</span>
+      </button>
+
+      <button onclick="switchTab('telemetry', 'Telemetry', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
+        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+        </div>
+        <span class="text-[11px] font-medium">Telemetry</span>
+      </button>
+
+      <button onclick="switchTab('iot', 'IoT & Keys', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
+        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        </div>
+        <span class="text-[11px] font-medium">IoT</span>
+      </button>
+
+      <button onclick="switchTab('console', 'Console', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
+        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <span class="text-[11px] font-medium">Console</span>
+      </button>
+    </div>
+  </nav>
+
+  <script>
+    // Nordic UART Service UUIDs для связи с трекером Молния
+    const NUS_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+    const NUS_RX_CHAR_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
+    const NUS_TX_CHAR_UUID = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
+
+    let bleDevice = null;
+    let rxCharacteristic = null;
+    let txCharacteristic = null;
+    let currentLedMode = 0;
+    let pendingKeyRotation = null;
+    let selectedOtaFile = null;
+    let demoInterval = null;
+    let currentLogFilter = 'ALL';
+    const sessionLogs = [];
+
+    // Инициализация сохранённого ключа из localStorage
+    const storedKey = localStorage.getItem('molniya_ble_key') || '1122334455667788';
+    document.getElementById('activeKeyInput').value = storedKey;
+
+    // Всплывающий тост без alert()
+    let toastTimer = null;
+    function showToast(text) {
+      const el = document.getElementById('toastBanner');
+      el.textContent = text;
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    }
+
+    // Сквозное логирование событий с ISO-таймштампами
+    function addLog(category, tag, message) {
+      const entry = {
+        ts: new Date().toISOString(),
+        category, // BLE | IO | BTN | SYS
+        tag,      // BLE | AUTH | TX | RX | BTN | ERR
+        message
+      };
+      sessionLogs.push(entry);
+      if (sessionLogs.length > 400) sessionLogs.shift();
+      renderLogs();
+    }
+
+    function renderLogs() {
+      const box = document.getElementById('terminalOutput');
+      const colorMap = {
+        TX: 'text-[#60A5FA]',
+        RX: 'text-[#4ADE80]',
+        AUTH: 'text-[#C8BFFD]',
+        BLE: 'text-[#9B8AFB]',
+        BTN: 'text-[#FBBF24]',
+        ERR: 'text-[#F87171]',
+        SYS: 'text-[#8E8A9E]'
+      };
+
+      const filtered = sessionLogs.filter(item => currentLogFilter === 'ALL' || item.category === currentLogFilter);
+      box.innerHTML = filtered.map(item => {
+        const cls = colorMap[item.tag] || 'text-[#EFEDF6]';
+        return `<div class="mb-1"><span class="text-[#635F75]">[${item.ts}]</span> <span class="${cls} font-semibold">${item.tag}</span> <span class="text-[#D4D0E2]">${escapeHtml(item.message)}</span></div>`;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function setLogFilter(filter, btn) {
+      currentLogFilter = filter;
+      document.querySelectorAll('.log-filter-btn').forEach(b => {
+        b.classList.remove('bg-[#9B8AFB]', 'text-[#12101C]');
+        b.classList.add('bg-[#22202B]', 'text-[#8E8A9E]');
+      });
+      btn.classList.remove('bg-[#22202B]', 'text-[#8E8A9E]');
+      btn.classList.add('bg-[#9B8AFB]', 'text-[#12101C]');
+      renderLogs();
+    }
+
+    function copyAllLogs() {
+      const text = sessionLogs.map(i => `[${i.ts}] ${i.tag}: ${i.message}`).join('\n');
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      showToast('Лог сессии скопирован');
+    }
+
+    function clearAllLogs() {
+      sessionLogs.length = 0;
+      renderLogs();
+      addLog('SYS', 'SYS', 'Console buffer cleared.');
+    }
+
+    // Переключение нижних вкладок
+    function switchTab(tabId, title, btnEl) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.getElementById('tab-' + tabId).classList.add('active');
+      document.getElementById('pageTitle').textContent = title;
+
+      document.querySelectorAll('.nav-btn').forEach(b => {
+        b.classList.remove('active', 'text-[#9B8AFB]');
+        b.classList.add('text-[#8E8A9E]');
+        b.querySelector('.nav-pill').classList.remove('bg-[#9B8AFB]/16');
+      });
+
+      btnEl.classList.add('active', 'text-[#9B8AFB]');
+      btnEl.classList.remove('text-[#8E8A9E]');
+      btnEl.querySelector('.nav-pill').classList.add('bg-[#9B8AFB]/16');
+    }
+
+    // Утилиты HEX <-> Bytes
+    function hexToBytes(hex) {
+      const clean = hex.replace(/[^0-9a-fA-F]/g, '');
+      const out = new Uint8Array(Math.floor(clean.length / 2));
+      for (let i = 0; i < out.length; i++) {
+        out[i] = parseInt(clean.substr(i * 2, 2), 16);
+      }
+      return out;
+    }
+
+    function bytesToHex(bytes) {
+      return Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join(' ');
+    }
+
+    // Сборка фрейма Ninebot/Molniya: [0x5A, 0xA5, LEN, OPCODE, ...PAYLOAD, XOR]
+    function buildFrame(opcode, payloadHex) {
+      const payload = hexToBytes(payloadHex);
+      const frame = new Uint8Array(5 + payload.length);
+      frame[0] = 0x5A;
+      frame[1] = 0xA5;
+      frame[2] = payload.length + 1;
+      frame[3] = opcode;
+      frame.set(payload, 4);
+      let xor = 0;
+      for (let i = 2; i < frame.length - 1; i++) xor ^= frame[i];
+      frame[frame.length - 1] = xor;
+      return frame;
+    }
+
+    // Сканирование и подключение по Web Bluetooth
+    async function scanAndConnect() {
+      addLog('BTN', 'BTN', 'Pressed: Scan & Connect');
+      if (!navigator.bluetooth) {
+        addLog('BLE', 'ERR', 'Web Bluetooth API недоступен (открой в Chrome по HTTPS).');
+        showToast('Web Bluetooth требует Chrome + HTTPS');
+        return;
+      }
+
+      try {
+        const showAll = document.getElementById('scanAllSwitch').checked;
+        addLog('BLE', 'BLE', showAll ? 'Starting scan (acceptAllDevices=true)...' : 'Scanning for Molniya / SNSC / Ninebot...');
+
+        const reqOptions = showAll
+          ? { acceptAllDevices: true, optionalServices: [NUS_SERVICE_UUID] }
+          : {
+              filters: [
+                { namePrefix: 'Molniya' },
+                { namePrefix: 'SNSC' },
+                { namePrefix: 'Ninebot' },
+                { services: [NUS_SERVICE_UUID] }
+              ],
+              optionalServices: [NUS_SERVICE_UUID]
+            };
+
+        bleDevice = await navigator.bluetooth.requestDevice(reqOptions);
+        addLog('BLE', 'BLE', `Found & selected: "${bleDevice.name || 'Unnamed'}" [ID: ${bleDevice.id}]`);
+
+        bleDevice.addEventListener('gattserverdisconnected', onBleDisconnected);
+
+        const server = await bleDevice.gatt.connect();
+        addLog('BLE', 'BLE', 'GATT Server connected. Discovering NUS service...');
+
+        const service = await server.getPrimaryService(NUS_SERVICE_UUID);
+        rxCharacteristic = await service.getCharacteristic(NUS_RX_CHAR_UUID);
+        txCharacteristic = await service.getCharacteristic(NUS_TX_CHAR_UUID);
+
+        await txCharacteristic.startNotifications();
+        txCharacteristic.addEventListener('characteristicvaluechanged', onBleNotification);
+
+        updateConnectionUI(true, bleDevice.name || 'Molniya IoT');
+        addLog('BLE', 'BLE', 'Subscribed to TX notifications. Initiating key handshake...');
+        await sendHandshake();
+      } catch (err) {
+        addLog('BLE', 'ERR', `BLE Scan/Connect aborted: ${err.message}`);
+      }
+    }
+
+    function onBleDisconnected() {
+      rxCharacteristic = null;
+      txCharacteristic = null;
+      updateConnectionUI(false, 'Molniya IoT Module');
+      addLog('BLE', 'ERR', 'BLE connection lost.');
+      showToast('Соединение с трекером разорвано');
+    }
+
+    function updateConnectionUI(isConnected, name) {
+      const pill = document.getElementById('connPill');
+      const dot = document.getElementById('connDot');
+      const text = document.getElementById('connText');
+      const rssi = document.getElementById('rssiIndicator');
+
+      document.getElementById('deviceTitle').textContent = name;
+      if (isConnected) {
+        pill.className = 'text-[11.5px] font-medium px-3 py-1 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30 flex items-center gap-1.5';
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-[#4ADE80]';
+        text.textContent = 'Connected';
+        rssi.classList.remove('hidden');
+        rssi.classList.add('flex');
+      } else {
+        pill.className = 'text-[11.5px] font-medium px-3 py-1 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835] flex items-center gap-1.5';
+        dot.className = 'w-1.5 h-1.5 rounded-full bg-[#8E8A9E]';
+        text.textContent = 'Disconnected';
+        rssi.classList.add('hidden');
+        rssi.classList.remove('flex');
+        document.getElementById('authStatusPill').textContent = 'Auth: Pending';
+        document.getElementById('authStatusPill').className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]';
+      }
+    }
+
+    // Отправка команды в BLE
+    async function sendCmd(opcode, payloadHex, btnLabel = '') {
+      if (btnLabel) addLog('BTN', 'BTN', `Action: ${btnLabel}`);
+      const frame = buildFrame(opcode, payloadHex);
+      const opStr = '0x' + opcode.toString(16).padStart(2, '0').toUpperCase();
+      addLog('IO', 'TX', `OP=${opStr} FRAME=[${bytesToHex(frame)}]`);
+
+      if (!rxCharacteristic) {
+        addLog('IO', 'ERR', 'Offline mode — packet logged locally (connect BLE to transmit).');
+        return;
+      }
+
+      try {
+        await rxCharacteristic.writeValue(frame);
+      } catch (err) {
+        addLog('IO', 'ERR', `GATT Write failed: ${err.message}`);
+      }
+    }
+
+    // Рукопожатие по BLE-ключу
+    async function sendHandshake() {
+      const key = document.getElementById('activeKeyInput').value.trim().toUpperCase();
+      addLog('BLE', 'AUTH', `Sending Handshake Key: ${key.slice(0, 4)}••••••••${key.slice(-4)}`);
+      await sendCmd(0xC0, key, 'BLE Key Handshake');
+    }
+
+    // Обработка входящих пакетов от трекера
+    function onBleNotification(event) {
+      const data = new Uint8Array(event.target.value.buffer);
+      addLog('IO', 'RX', `FRAME=[${bytesToHex(data)}]`);
+      if (data.length < 5 || data[0] !== 0x5A || data[1] !== 0xA5) return;
+
+      const opcode = data[3];
+      if (opcode === 0xC0) {
+        const verified = data[4] === 0x01;
+        const badge = document.getElementById('authStatusPill');
+        if (verified) {
+          badge.textContent = 'Auth: Verified';
+          badge.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#9B8AFB]/15 text-[#C8BFFD] border border-[#9B8AFB]/30';
+          addLog('BLE', 'AUTH', 'Handshake accepted by Molniya IoT.');
+          showToast('BLE-ключ подтверждён');
+        } else {
+          badge.textContent = 'Auth: Key Rejected';
+          badge.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30';
+          addLog('BLE', 'ERR', 'Handshake rejected: invalid BLE key!');
+          showToast('Ошибка: неверный BLE-ключ');
+        }
+      }
+
+      if (opcode === 0xC4 && data[4] === 0x01 && pendingKeyRotation) {
+        document.getElementById('activeKeyInput').value = pendingKeyRotation;
+        localStorage.setItem('molniya_ble_key', pendingKeyRotation);
+        addLog('BLE', 'AUTH', `New BLE key written to IoT flash & saved: ${pendingKeyRotation}`);
+        showToast('Новый BLE-ключ записан в трекер');
+        pendingKeyRotation = null;
+      }
+
+      if (opcode === 0x31 && data.length >= 11) {
+        const bat = data[4];
+        const speed = ((data[5] << 8) | data[6]) / 10;
+        const volt = ((data[7] << 8) | data[8]) / 100;
+        const range = data[9] / 10;
+        const mode = data[10];
+        updateTelemetryUI(bat, speed, volt, range, mode);
+      }
+    }
+
+    // Действия кнопок управления
+    function handleUnlock() {
+      sendCmd(0x01, '01', 'Unlock Scooter');
+      document.getElementById('telLockState').textContent = 'Unlocked';
+      document.getElementById('telLockState').className = 'font-semibold text-[#4ADE80]';
+      showToast('Команда Unlock отправлена');
+    }
+
+    function handleLock() {
+      sendCmd(0x01, '00', 'Lock Scooter');
+      document.getElementById('telLockState').textContent = 'Locked';
+      document.getElementById('telLockState').className = 'font-semibold text-[#F87171]';
+      showToast('Команда Lock отправлена');
+    }
+
+    function openBatteryCover() {
+      sendCmd(0x05, '01', 'Open Deck Solenoid (Battery Cover)');
+      const pill = document.getElementById('deckLatchPill');
+      const telDeck = document.getElementById('telDeckState');
+      pill.textContent = 'Deck: Pulse 350ms';
+      pill.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30';
+      telDeck.textContent = 'Triggered (Open)';
+      showToast('Импульс открытия замка деки (350 мс)');
+      setTimeout(() => {
+        pill.textContent = 'Deck: Closed';
+        pill.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20';
+        telDeck.textContent = 'Closed (OK)';
+      }, 2200);
+    }
+
+    function setSpeedProfile(modeNum, label) {
+      sendCmd(0x06, modeNum.toString(16).padStart(2, '0'), `Switch Profile: ${label}`);
+      document.getElementById('telModeLabel').textContent = modeNum === 3 ? 'SHFW 3' : `Mode ${modeNum}`;
+      showToast(`Профиль: ${label}`);
+    }
+
+    // RGB Подсветка IoT
+    function syncRgbUI() {
+      const r = parseInt(document.getElementById('sliderR').value);
+      const g = parseInt(document.getElementById('sliderG').value);
+      const b = parseInt(document.getElementById('sliderB').value);
+      document.getElementById('valR').textContent = r;
+      document.getElementById('valG').textContent = g;
+      document.getElementById('valB').textContent = b;
+      document.getElementById('rgbReadout').textContent = `RGB(${r}, ${g}, ${b})`;
+
+      const hex = '#' + [r, g, b].map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+      document.getElementById('hexValueLabel').textContent = hex;
+      const swatch = document.getElementById('colorSwatch');
+      swatch.style.backgroundColor = hex;
+      swatch.style.boxShadow = `0 0 18px rgba(${r}, ${g}, ${b}, 0.55)`;
+    }
+
+    function setPresetColor(r, g, b) {
+      document.getElementById('sliderR').value = r;
+      document.getElementById('sliderG').value = g;
+      document.getElementById('sliderB').value = b;
+      syncRgbUI();
+      addLog('BTN', 'BTN', `Selected RGB preset (${r}, ${g}, ${b})`);
+    }
+
+    function selectLedMode(mode) {
+      currentLedMode = mode;
+      [0, 1, 2].forEach(idx => {
+        const el = document.getElementById('ledMode' + idx);
+        if (idx === mode) {
+          el.className = 'py-2 rounded-xl text-[12.5px] font-semibold bg-[#9B8AFB] text-[#12101C]';
+        } else {
+          el.className = 'm3-tile py-2 rounded-xl text-[12.5px] font-medium text-[#8E8A9E]';
+        }
+      });
+      addLog('BTN', 'BTN', `LED Mode -> ${['Solid', 'Breathe', 'Flash'][mode]}`);
+    }
+
+    function applyColourCommand() {
+      const r = parseInt(document.getElementById('sliderR').value).toString(16).padStart(2, '0');
+      const g = parseInt(document.getElementById('sliderG').value).toString(16).padStart(2, '0');
+      const b = parseInt(document.getElementById('sliderB').value).toString(16).padStart(2, '0');
+      const m = currentLedMode.toString(16).padStart(2, '0');
+      const payload = `${r}${g}${b}${m}`.toUpperCase();
+      sendCmd(0x30, payload, `Apply IoT RGB (#${r}${g}${b}, mode=${currentLedMode})`);
+      showToast(`Цвет #${r}${g}${b} применён`);
+    }
+
+    // Управление BLE-ключами
+    function toggleKeyVisibility() {
+      const inp = document.getElementById('activeKeyInput');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    }
+
+    function saveActiveKey() {
+      const val = document.getElementById('activeKeyInput').value.trim().toUpperCase();
+      if (!/^[0-9A-F]{16}$/.test(val)) {
+        showToast('Ключ должен содержать ровно 16 HEX-символов');
+        return;
+      }
+      localStorage.setItem('molniya_ble_key', val);
+      addLog('BLE', 'AUTH', 'Updated local BLE Auth Key in storage.');
+      showToast('BLE-ключ сохранён в приложении');
+    }
+
+    function generateRandomKey() {
+      const bytes = new Uint8Array(8);
+      crypto.getRandomValues(bytes);
+      const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
+      document.getElementById('newKeyInput').value = hex;
+      addLog('BTN', 'BTN', 'Generated new random 64-bit BLE key.');
+    }
+
+    function writeNewKeyToIoT() {
+      const newKey = document.getElementById('newKeyInput').value.trim().toUpperCase();
+      if (!/^[0-9A-F]{16}$/.test(newKey)) {
+        showToast('Введи корректный 16-значный HEX ключ');
+        return;
+      }
+      pendingKeyRotation = newKey;
+      sendCmd(0xC4, newKey, 'Write New BLE Key (0xC4)');
+      if (!rxCharacteristic) {
+        // Если офлайн — сохраняем локально для теста
+        document.getElementById('activeKeyInput').value = newKey;
+        localStorage.setItem('molniya_ble_key', newKey);
+        showToast('Офлайн: ключ обновлён локально');
+      }
+    }
+
+    // OTA прошивка
+    function handleOtaFileSelect(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      selectedOtaFile = file;
+      document.getElementById('otaFileName').textContent = file.name;
+      document.getElementById('otaFileSize').textContent = `${(file.size / 1024).toFixed(1)} KB • Ready to flash`;
+      addLog('BLE', 'BLE', `Loaded OTA image: ${file.name} (${file.size} bytes)`);
+    }
+
+    function startOtaFlash() {
+      if (!selectedOtaFile) {
+        showToast('Сначала выбери .bin файл прошивки');
+        return;
+      }
+      addLog('BTN', 'BTN', `Initiating OTA Flash for ${selectedOtaFile.name}`);
+      sendCmd(0xC5, '01', 'OTA Start Request');
+      showToast('Запрос OTA-прошивки отправлен');
+    }
+
+    // Консоль ручных команд
+    function fillOpcode(op, pl) {
+      document.getElementById('cmdOpcodeInput').value = op;
+      document.getElementById('cmdPayloadInput').value = pl;
+    }
+
+    function sendManualCommand() {
+      const opHex = document.getElementById('cmdOpcodeInput').value.trim();
+      const plHex = document.getElementById('cmdPayloadInput').value.trim();
+      const op = parseInt(opHex, 16);
+      if (isNaN(op)) {
+        showToast('Некорректный HEX Opcode');
+        return;
+      }
+      sendCmd(op, plHex, `Manual Console Command (0x${opHex.toUpperCase()})`);
+    }
+
+    // Телеметрия и Демо-режим
+    function updateTelemetryUI(bat, speed, volt, range, mode) {
+      document.getElementById('telBatteryPct').textContent = `${bat}%`;
+      document.getElementById('telBatteryBar').style.width = `${bat}%`;
+      document.getElementById('telSpeed').innerHTML = `${speed.toFixed(1)} <span class="text-[13px] font-normal text-[#8E8A9E]">km/h</span>`;
+      document.getElementById('telVoltage').innerHTML = `${volt.toFixed(2)} <span class="text-[13px] font-normal text-[#8E8A9E]">V</span>`;
+      document.getElementById('telRange').innerHTML = `${range.toFixed(1)} <span class="text-[13px] font-normal text-[#8E8A9E]">km</span>`;
+      document.getElementById('telModeLabel').textContent = mode === 3 ? 'SHFW 3' : `Mode ${mode}`;
+    }
+
+    function toggleDemoSimulation() {
+      const label = document.getElementById('demoSimLabel');
+      if (demoInterval) {
+        clearInterval(demoInterval);
+        demoInterval = null;
+        label.textContent = 'Demo Ride: OFF';
+        updateTelemetryUI(84, 0.0, 40.65, 34.2, 3);
+        document.getElementById('telAmp').textContent = '0.0 A';
+        addLog('SYS', 'SYS', 'Demo telemetry stream stopped.');
+      } else {
+        label.textContent = 'Demo Ride: ON';
+        addLog('SYS', 'SYS', 'Started live SHFW 35 km/h demo telemetry simulation.');
+        let tick = 0;
+        demoInterval = setInterval(() => {
+          tick++;
+          const speed = Math.min(35.4, 18.5 + Math.sin(tick * 0.4) * 14 + 3);
+          const amp = (speed * 0.62).toFixed(1);
+          const volt = 40.65 - (speed * 0.045);
+          document.getElementById('telAmp').textContent = `${amp} A`;
+          document.getElementById('telTemp').textContent = `${(24.5 + (tick % 10) * 0.2).toFixed(1)} °C`;
+          updateTelemetryUI(83, speed, volt, 33.8, 3);
+          const simFrame = buildFrame(0x31, '53015E0FB42203');
+          addLog('IO', 'RX', `SIM_TELEMETRY [${bytesToHex(simFrame)}] -> V=${volt.toFixed(2)}V SPD=${speed.toFixed(1)}km/h`);
+        }, 1200);
+      }
+    }
+
+    // Стартовый лог
+    addLog('SYS', 'SYS', 'Molniya IoT Control v2.0 ready. Web Bluetooth NUS initialized.');
+  </script>
+</body>
+</html>
