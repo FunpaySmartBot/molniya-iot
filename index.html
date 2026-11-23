@@ -1,17 +1,11 @@
 <!DOCTYPE html>
-<html lang="ru">
-<head>
-  <link rel="manifest" href="manifest.json" />
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <meta name="theme-color" content="#0F0E13" />
+<html lang="ru"><head>
+  <link rel="manifest" href="manifest.json">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0F0E13">
   <title>Molniya IoT Control</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* Основные дизайн-токены Material You Dark */
     :root {
       --bg-obsidian: #0F0E13;
       --surface-1: #18171F;
@@ -46,7 +40,6 @@
       font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
     }
 
-    /* Карточки и плитки Material You */
     .m3-card {
       background-color: var(--surface-1);
       border: 1px solid var(--border-subtle);
@@ -102,7 +95,6 @@
       background-color: rgba(155, 138, 251, 0.22);
     }
 
-    /* Слайдеры RGB и скорости */
     input[type="range"].rgb-slider {
       -webkit-appearance: none;
       appearance: none;
@@ -129,7 +121,6 @@
       transform: scale(1.18);
     }
 
-    /* Кастомный Color Picker */
     input[type="color"].m3-color-picker {
       -webkit-appearance: none;
       appearance: none;
@@ -152,7 +143,6 @@
       border-radius: 12px;
     }
 
-    /* Switch */
     .m3-switch {
       position: relative;
       display: inline-block;
@@ -199,7 +189,6 @@
       background-color: #12101C;
     }
 
-    /* Поля ввода */
     .m3-input {
       background-color: var(--bg-obsidian);
       border: 1px solid var(--border-subtle);
@@ -216,7 +205,11 @@
       border-color: var(--primary);
     }
 
-    /* Вкладки */
+    .key-masked-field {
+      -webkit-text-security: disc;
+      text-security: disc;
+    }
+
     .tab-pane {
       display: none;
       animation: fadeIn 0.18s ease-out;
@@ -231,7 +224,6 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Консоль */
     .terminal-box {
       background-color: #0B0A0E;
       border: 1px solid var(--border-subtle);
@@ -243,7 +235,6 @@
       line-height: 1.55;
     }
 
-    /* Всплывающий тост */
     #toastBanner {
       position: fixed;
       top: 72px;
@@ -260,7 +251,7 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 80;
+      z-index: 90;
       white-space: nowrap;
       max-width: 92vw;
       overflow: hidden;
@@ -272,11 +263,10 @@
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Модальные окна */
     .m3-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(8, 7, 11, 0.8);
+      background: rgba(8, 7, 11, 0.84);
       backdrop-filter: blur(6px);
       display: flex;
       align-items: center;
@@ -296,100 +286,112 @@
       border-radius: 24px;
       padding: 20px;
       width: 100%;
-      max-width: 350px;
+      max-width: 375px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.65);
     }
   </style>
-</head>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.sticky{position:sticky}.bottom-0{bottom:0px}.left-0{left:0px}.right-0{right:0px}.right-2{right:0.5rem}.right-2\.5{right:0.625rem}.top-0{top:0px}.top-1\/2{top:50%}.z-30{z-index:30}.z-40{z-index:40}.col-span-2{grid-column:span 2 / span 2}.mx-auto{margin-left:auto;margin-right:auto}.\!mb-0{margin-bottom:0px !important}.mb-0\.5{margin-bottom:0.125rem}.mb-1\.5{margin-bottom:0.375rem}.mb-2{margin-bottom:0.5rem}.mb-2\.5{margin-bottom:0.625rem}.mb-3{margin-bottom:0.75rem}.mb-3\.5{margin-bottom:0.875rem}.mt-0\.5{margin-top:0.125rem}.mt-1\.5{margin-top:0.375rem}.mt-2{margin-top:0.5rem}.mt-3\.5{margin-top:0.875rem}.mb-1{margin-bottom:0.25rem}.mt-2\.5{margin-top:0.625rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-1\.5{height:0.375rem}.h-14{height:3.5rem}.h-2{height:0.5rem}.h-2\.5{height:0.625rem}.h-3{height:0.75rem}.h-3\.5{height:0.875rem}.h-6{height:1.5rem}.h-7{height:1.75rem}.h-8{height:2rem}.h-9{height:2.25rem}.h-full{height:100%}.h-10{height:2.5rem}.w-1\.5{width:0.375rem}.w-3{width:0.75rem}.w-6{width:1.5rem}.w-7{width:1.75rem}.w-8{width:2rem}.w-9{width:2.25rem}.w-\[2\.5px\]{width:2.5px}.w-full{width:100%}.w-10{width:2.5rem}.min-w-0{min-width:0px}.max-w-md{max-width:28rem}.flex-1{flex:1 1 0%}.shrink-0{flex-shrink:0}.-translate-y-1\/2{--tw-translate-y:-50%;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-1\.5{gap:0.375rem}.gap-2{gap:0.5rem}.gap-2\.5{gap:0.625rem}.gap-3{gap:0.75rem}.gap-\[2px\]{gap:2px}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-3\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.875rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.875rem * var(--tw-space-y-reverse))}.space-y-1\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.375rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.375rem * var(--tw-space-y-reverse))}.space-y-2\.5 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.625rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.625rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.divide-\[\#2A2835\] > :not([hidden]) ~ :not([hidden]){--tw-divide-opacity:1;border-color:rgb(42 40 53 / var(--tw-divide-opacity, 1))}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.break-all{word-break:break-all}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-md{border-radius:0.375rem}.rounded-xl{border-radius:0.75rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-t{border-top-width:1px}.border-\[\#2A2835\]{--tw-border-opacity:1;border-color:rgb(42 40 53 / var(--tw-border-opacity, 1))}.border-\[\#4ADE80\]\/20{border-color:rgb(74 222 128 / 0.2)}.border-\[\#4ADE80\]\/25{border-color:rgb(74 222 128 / 0.25)}.border-\[\#9B8AFB\]\/30{border-color:rgb(155 138 251 / 0.3)}.border-\[\#F87171\]\/25{border-color:rgb(248 113 113 / 0.25)}.border-\[\#FBBF24\]\/30{border-color:rgb(251 191 36 / 0.3)}.border-white\/15{border-color:rgb(255 255 255 / 0.15)}.border-white\/25{border-color:rgb(255 255 255 / 0.25)}.bg-\[\#00AFFF\]{--tw-bg-opacity:1;background-color:rgb(0 175 255 / var(--tw-bg-opacity, 1))}.bg-\[\#0F0E13\]{--tw-bg-opacity:1;background-color:rgb(15 14 19 / var(--tw-bg-opacity, 1))}.bg-\[\#0F0E13\]\/90{background-color:rgb(15 14 19 / 0.9)}.bg-\[\#121117\]{--tw-bg-opacity:1;background-color:rgb(18 17 23 / var(--tw-bg-opacity, 1))}.bg-\[\#18171F\]{--tw-bg-opacity:1;background-color:rgb(24 23 31 / var(--tw-bg-opacity, 1))}.bg-\[\#18171F\]\/95{background-color:rgb(24 23 31 / 0.95)}.bg-\[\#22202B\]{--tw-bg-opacity:1;background-color:rgb(34 32 43 / var(--tw-bg-opacity, 1))}.bg-\[\#4ADE80\]{--tw-bg-opacity:1;background-color:rgb(74 222 128 / var(--tw-bg-opacity, 1))}.bg-\[\#4ADE80\]\/10{background-color:rgb(74 222 128 / 0.1)}.bg-\[\#8E8A9E\]{--tw-bg-opacity:1;background-color:rgb(142 138 158 / var(--tw-bg-opacity, 1))}.bg-\[\#8E8A9E\]\/15{background-color:rgb(142 138 158 / 0.15)}.bg-\[\#8E8A9E\]\/40{background-color:rgb(142 138 158 / 0.4)}.bg-\[\#9B8AFB\]{--tw-bg-opacity:1;background-color:rgb(155 138 251 / var(--tw-bg-opacity, 1))}.bg-\[\#9B8AFB\]\/15{background-color:rgb(155 138 251 / 0.15)}.bg-\[\#FBBF24\]\/15{background-color:rgb(251 191 36 / 0.15)}.bg-\[\#4ADE80\]\/15{background-color:rgb(74 222 128 / 0.15)}.p-1{padding:0.25rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-3\.5{padding:0.875rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-2\.5{padding-left:0.625rem;padding-right:0.625rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-3\.5{padding-left:0.875rem;padding-right:0.875rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-3\.5{padding-top:0.875rem;padding-bottom:0.875rem}.pr-10{padding-right:2.5rem}.pr-20{padding-right:5rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.pt-3\.5{padding-top:0.875rem}.pb-1{padding-bottom:0.25rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-\[10\.5px\]{font-size:10.5px}.text-\[10px\]{font-size:10px}.text-\[11\.5px\]{font-size:11.5px}.text-\[11px\]{font-size:11px}.text-\[12\.5px\]{font-size:12.5px}.text-\[12px\]{font-size:12px}.text-\[13\.5px\]{font-size:13.5px}.text-\[13px\]{font-size:13px}.text-\[14px\]{font-size:14px}.text-\[15px\]{font-size:15px}.text-\[16px\]{font-size:16px}.text-\[18px\]{font-size:18px}.text-\[20px\]{font-size:20px}.text-\[22px\]{font-size:22px}.font-bold{font-weight:700}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-none{line-height:1}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.tracking-tight{letter-spacing:-0.025em}.tracking-wider{letter-spacing:0.05em}.text-\[\#12101C\]{--tw-text-opacity:1;color:rgb(18 16 28 / var(--tw-text-opacity, 1))}.text-\[\#4ADE80\]{--tw-text-opacity:1;color:rgb(74 222 128 / var(--tw-text-opacity, 1))}.text-\[\#60A5FA\]{--tw-text-opacity:1;color:rgb(96 165 250 / var(--tw-text-opacity, 1))}.text-\[\#8E8A9E\]{--tw-text-opacity:1;color:rgb(142 138 158 / var(--tw-text-opacity, 1))}.text-\[\#9B8AFB\]{--tw-text-opacity:1;color:rgb(155 138 251 / var(--tw-text-opacity, 1))}.text-\[\#C8BFFD\]{--tw-text-opacity:1;color:rgb(200 191 253 / var(--tw-text-opacity, 1))}.text-\[\#EFEDF6\]{--tw-text-opacity:1;color:rgb(239 237 246 / var(--tw-text-opacity, 1))}.text-\[\#F87171\]{--tw-text-opacity:1;color:rgb(248 113 113 / var(--tw-text-opacity, 1))}.text-\[\#FBBF24\]{--tw-text-opacity:1;color:rgb(251 191 36 / var(--tw-text-opacity, 1))}.text-\[\#635F75\]{--tw-text-opacity:1;color:rgb(99 95 117 / var(--tw-text-opacity, 1))}.text-\[\#D4D0E2\]{--tw-text-opacity:1;color:rgb(212 208 226 / var(--tw-text-opacity, 1))}.opacity-80{opacity:0.8}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-colors{transition-property:color, background-color, border-color, fill, stroke, -webkit-text-decoration-color;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, -webkit-text-decoration-color;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.transition-none{transition-property:none}.transition-transform{transition-property:transform;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.duration-300{transition-duration:300ms}.hover\:bg-\[\#2B2836\]:hover{--tw-bg-opacity:1;background-color:rgb(43 40 54 / var(--tw-bg-opacity, 1))}.hover\:text-\[\#EFEDF6\]:hover{--tw-text-opacity:1;color:rgb(239 237 246 / var(--tw-text-opacity, 1))}.active\:scale-95:active{--tw-scale-x:.95;--tw-scale-y:.95;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}</style><script id="aesVaultPayloadScript">window.__MOLNIYA_AES_VAULT__ = {"iter":180000,"s":"Yv9whm4wfaX3vDaVSNlHLA==","i":"mRTmhxyCv3uXtt39","c":"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"};</script></head>
 <body>
 
-  <!-- Всплывающий тост -->
-  <div id="toastBanner"></div>
+  <div id="toastBanner" class="">Хранилище расшифровано</div>
 
-  <!-- Модальное окно подтверждения / PIN-кода -->
   <div id="securityModal" class="m3-modal-backdrop hidden">
     <div class="m3-modal-box">
       <div class="flex items-center gap-2.5 mb-2">
         <div class="w-8 h-8 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </div>
-        <h3 id="modalTitle" class="text-[16px] font-semibold text-[#EFEDF6]">Подтверждение</h3>
+        <h3 id="modalTitle" class="text-[16px] font-semibold text-[#EFEDF6]">Инженерный доступ</h3>
       </div>
-      <p id="modalDesc" class="text-[13px] text-[#8E8A9E] leading-relaxed mb-3.5"></p>
-      <div id="modalPinWrap" class="hidden mb-3.5">
-        <input type="password" inputmode="numeric" pattern="[0-9]*" maxlength="4" id="modalPinField" class="m3-input font-mono-code text-center text-[20px] tracking-[0.45em]" placeholder="••••" autocomplete="off" />
+      <p id="modalDesc" class="text-[13px] text-[#8E8A9E] leading-relaxed mb-3.5">Введи мастер-фразу для расшифровки AES-GCM-256 хранилища:</p>
+      <div id="modalPassWrap" class="mb-3.5">
+        <div class="relative">
+          <input type="text" id="modalPassField" class="m3-input font-mono-code pr-10 text-[13.5px] key-masked-field" placeholder="Мастер-фраза хранилища" autocomplete="off" autocapitalize="off" spellcheck="false">
+          <button type="button" onclick="toggleModalPassVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8A9E] hover:text-[#EFEDF6] p-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+        <div id="lockoutNotice" class="hidden text-[11.5px] text-[#F87171] text-center mt-2 font-medium"></div>
       </div>
       <div class="grid grid-cols-2 gap-2.5">
         <button type="button" onclick="closeSecurityModal()" class="m3-tile py-2.5 px-3 text-[13px] font-medium text-[#8E8A9E]">Отмена</button>
-        <button type="button" id="modalConfirmAction" class="m3-btn-primary py-2.5 px-3 text-[13px]">Подтвердить</button>
+        <button type="button" id="modalConfirmAction" class="m3-btn-primary py-2.5 px-3 text-[13px]" disabled="">Расшифровать</button>
       </div>
     </div>
   </div>
 
-  <!-- Быстрое модальное окно BLE Auth Key (доступно с главного экрана без PIN) -->
   <div id="quickKeyModal" class="m3-modal-backdrop hidden">
     <div class="m3-modal-box">
       <div class="flex items-center justify-between mb-2">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
             </svg>
           </div>
-          <h3 class="text-[16px] font-semibold text-[#EFEDF6]">BLE Auth Key</h3>
+          <h3 class="text-[16px] font-semibold text-[#EFEDF6]">User BLE Key</h3>
         </div>
-        <span class="font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#22202B] text-[#9B8AFB] border border-[#2A2835]">8-BYTE HEX</span>
+        <span id="quickKeyCounter" class="font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#22202B] text-[#9B8AFB] border border-[#2A2835]">0 / 32 HEX</span>
       </div>
       <p class="text-[12.5px] text-[#8E8A9E] leading-relaxed mb-3">
-        Введи 16-значный HEX ключ для авторизации подключения или загрузи файл ключа.
+        Вставь 32-символьный HEX-ключ модуля или загрузи <span class="font-mono-code text-[#C8BFFD]">.mkey</span> / <span class="font-mono-code text-[#C8BFFD]">.txt</span>. Ключ не передаётся в эфир — используется только для HMAC-SHA256.
       </p>
 
-      <div class="relative mb-3">
-        <input type="password" id="quickKeyField" maxlength="16" class="m3-input font-mono-code pr-10 tracking-wider uppercase" placeholder="1122334455667788" />
-        <button type="button" onclick="toggleQuickKeyVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8A9E] hover:text-[#EFEDF6] p-1" title="Показать / Скрыть">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      <div class="relative mb-2.5">
+        <input type="text" id="quickKeyField" oninput="sanitizeQuickKeyInput()" class="m3-input font-mono-code pr-20 text-[12px] tracking-wider uppercase" placeholder="Введи или вставь 32 HEX..." autocomplete="off" autocapitalize="characters" spellcheck="false">
+        <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+          <button type="button" onclick="pasteQuickKeyFromClipboard()" class="px-2 py-1 rounded-lg bg-[#22202B] text-[10.5px] font-medium text-[#C8BFFD] border border-[#2A2835] active:scale-95">Paste</button>
+          <button type="button" onclick="toggleQuickKeyMask()" class="text-[#8E8A9E] hover:text-[#EFEDF6] p-1">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 mb-3">
+        <button type="button" onclick="document.getElementById('keyFileInput').click()" class="m3-tile py-2.5 px-2.5 text-[12px] font-medium text-[#C8BFFD] flex items-center justify-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Load .mkey/.txt
+        </button>
+        <button type="button" onclick="exportUserKeyFile()" class="m3-tile py-2.5 px-2.5 text-[12px] font-medium text-[#8E8A9E] hover:text-[#EFEDF6] flex items-center justify-center gap-1.5">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+          Export .mkey
         </button>
       </div>
 
-      <button type="button" onclick="document.getElementById('keyFileInput').click()" class="m3-tile w-full py-2.5 px-3 mb-3 text-[12.5px] font-medium text-[#C8BFFD] flex items-center justify-center gap-2">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-        Load .mkey / .txt
-      </button>
+      <div class="text-[11px] text-[#8E8A9E] bg-[#121117] border border-[#2A2835] rounded-xl p-2.5 mb-3 leading-snug">
+        Храни файл <span class="font-mono-code text-[#C8BFFD]">.mkey</span> локально и не загружай его в публичные облачные хранилища.
+      </div>
 
       <div class="grid grid-cols-2 gap-2.5">
         <button type="button" onclick="closeQuickKeyModal()" class="m3-tile py-2.5 px-3 text-[13px] font-medium text-[#8E8A9E]">Закрыть</button>
-        <button type="button" onclick="applyQuickKey()" class="m3-btn-primary py-2.5 px-3 text-[13px]">Сохранить и применить</button>
+        <button type="button" onclick="applyQuickKey()" class="m3-btn-primary py-2.5 px-3 text-[13px]">Применить</button>
       </div>
     </div>
   </div>
 
-  <!-- Скрытый input для импорта ключей (.mkey / .txt / .hex) -->
-  <input type="file" id="keyFileInput" accept=".mkey,.txt,.hex" class="hidden" onchange="handleKeyFileImport(event)" />
+  <input type="file" id="keyFileInput" accept=".mkey,.txt,.hex" class="hidden" onchange="handleKeyFileImport(event)">
 
-  <!-- Верхняя панель навигации -->
   <header class="sticky top-0 z-30 bg-[#0F0E13]/90 backdrop-blur-md border-b border-[#2A2835] px-4 py-3.5">
     <div class="max-w-md mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2.5">
         <div class="w-8 h-8 rounded-xl bg-[#9B8AFB]/15 border border-[#9B8AFB]/30 flex items-center justify-center text-[#9B8AFB]">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
           </svg>
         </div>
         <div>
-          <h1 id="pageTitle" class="text-[18px] font-semibold tracking-tight leading-none">Control by @Sirn8ki</h1>
+          <h1 id="pageTitle" class="text-[18px] font-semibold tracking-tight leading-none">IoT Admin &amp; HKDF</h1>
           <span class="text-[11px] text-[#8E8A9E]">SNSC 2.3 • Molniya IoT</span>
         </div>
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- Индикатор сигнала RSSI -->
-        <div id="rssiIndicator" class="hidden items-end gap-[2px] h-3.5 px-2 py-1 rounded-full bg-[#22202B] border border-[#2A2835]" title="BLE Signal">
+        <div id="rssiIndicator" class="hidden items-end gap-[2px] h-3.5 px-2 py-1 rounded-full bg-[#22202B] border border-[#2A2835]">
           <span class="w-[2.5px] h-1.5 bg-[#4ADE80] rounded-full"></span>
           <span class="w-[2.5px] h-2 bg-[#4ADE80] rounded-full"></span>
           <span class="w-[2.5px] h-2.5 bg-[#4ADE80] rounded-full"></span>
           <span class="w-[2.5px] h-3 bg-[#8E8A9E]/40 rounded-full"></span>
         </div>
-        <!-- Статус подключения -->
         <span id="connPill" class="text-[11.5px] font-medium px-3 py-1 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835] flex items-center gap-1.5">
           <span id="connDot" class="w-1.5 h-1.5 rounded-full bg-[#8E8A9E]"></span>
           <span id="connText">Disconnected</span>
@@ -398,32 +400,30 @@
     </div>
   </header>
 
-  <main class="max-w-md mx-auto px-3.5 pt-3.5">
+  <main id="appMainContainer" class="max-w-md mx-auto px-3.5 pt-3.5">
 
-    <!-- ==================== ВКЛАДКА 1: CONTROL ==================== -->
     <section id="tab-control" class="tab-pane active">
 
-      <!-- Карточка подключения и статусов -->
       <div class="m3-card">
         <div class="flex items-start justify-between mb-3">
           <div>
-            <div id="deviceTitle" class="text-[15px] font-semibold text-[#EFEDF6]">Molniya IoT Module</div>
+            <div class="flex items-center gap-2">
+              <span id="deviceTitle" class="text-[15px] font-semibold text-[#EFEDF6]">Molniya IoT Module</span>
+              <span id="deviceIdBadge" class="hidden font-mono-code text-[10px] px-2 py-0.5 rounded-md bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]">ID: --</span>
+            </div>
             <div class="flex flex-wrap items-center gap-1.5 mt-1.5">
+              <span id="keyLoadedPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30">Key: Not Set</span>
               <span id="authStatusPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]">
                 Auth: Pending
               </span>
-              <span id="deckLatchPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20">
-                Deck: Closed
-              </span>
               <span id="nonceBadgePill" class="text-[10.5px] font-mono-code px-2 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]">
-                Nonce: Ready
+                Nonce: Awaiting
               </span>
             </div>
           </div>
-          <!-- Кнопка быстрого ввода ключа (открывает модальное окно без PIN) -->
-          <button type="button" onclick="openQuickKeyModal()" class="p-2.5 rounded-xl bg-[#22202B] text-[#9B8AFB] hover:bg-[#2B2836] border border-[#2A2835] active:scale-95 transition-transform" title="Ввести BLE Auth Key">
+          <button type="button" onclick="openQuickKeyModal()" class="p-2.5 rounded-xl bg-[#22202B] text-[#9B8AFB] hover:bg-[#2B2836] border border-[#2A2835] active:scale-95 transition-transform">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+              <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
             </svg>
           </button>
         </div>
@@ -431,16 +431,16 @@
         <div class="grid grid-cols-2 gap-2.5">
           <button type="button" onclick="scanAndConnect()" class="m3-btn-primary py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M7 7l10 10-5 5V2l5 5L7 17"/>
+              <path d="M7 7l10 10-5 5V2l5 5L7 17"></path>
             </svg>
-            Scan & Connect
+            Scan &amp; Connect
           </button>
-          <button type="button" onclick="sendHandshake()" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
+          <button type="button" onclick="initiateUserChallengeHandshake()" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
-              <path d="M3 3v5h5"/>
-              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
-              <path d="M16 16h5v5"/>
+              <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+              <path d="M3 3v5h5"></path>
+              <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+              <path d="M16 16h5v5"></path>
             </svg>
             Re-handshake
           </button>
@@ -449,27 +449,31 @@
         <div class="flex items-center justify-between mt-3.5 pt-3 border-t border-[#2A2835]">
           <span class="text-[12px] text-[#8E8A9E]">Show all BLE devices</span>
           <label class="m3-switch">
-            <input type="checkbox" id="scanAllSwitch" />
+            <input type="checkbox" id="scanAllSwitch">
             <span class="m3-switch-track"></span>
           </label>
         </div>
       </div>
 
-      <!-- Блок Lock & Deck Solenoid (немедленное срабатывание без модальных подтверждений) -->
       <div class="m3-card">
-        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">Lock & Deck Solenoid</div>
+        <div class="flex items-center justify-between mb-2.5">
+          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Lock &amp; Deck Solenoid</span>
+          <span id="deckLatchPill" class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#4ADE80]/10 text-[#4ADE80] border border-[#4ADE80]/20">
+            Deck: Closed
+          </span>
+        </div>
         <div class="grid grid-cols-2 gap-2.5 mb-2.5">
           <button type="button" onclick="handleUnlock()" class="m3-btn-primary py-3.5 px-3 text-[14px] flex items-center justify-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 9.9-1"></path>
             </svg>
             Unlock
           </button>
           <button type="button" onclick="handleLock()" class="m3-tile py-3.5 px-3 text-[14px] font-medium text-[#EFEDF6] flex items-center justify-center gap-2">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
             </svg>
             Lock
           </button>
@@ -479,10 +483,10 @@
           <button type="button" onclick="openBatteryCover()" class="m3-tile p-3 flex items-center gap-3 text-left">
             <div class="w-9 h-9 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="6" y="4" width="12" height="18" rx="2"/>
-                <line x1="10" y1="2" x2="14" y2="2"/>
-                <path d="M12 10v6"/>
-                <path d="M9 13h6"/>
+                <rect x="6" y="4" width="12" height="18" rx="2"></rect>
+                <line x1="10" y1="2" x2="14" y2="2"></line>
+                <path d="M12 10v6"></path>
+                <path d="M9 13h6"></path>
               </svg>
             </div>
             <div>
@@ -491,12 +495,12 @@
             </div>
           </button>
 
-          <button type="button" onclick="sendCmd(0x04, '01', 'Find / Horn Buzzer')" class="m3-tile p-3 flex items-center gap-3 text-left">
+          <button type="button" onclick="handleUserCommandAction(0x04, '01', 'Find / Horn Buzzer', 'Зуммер активирован')" class="m3-tile p-3 flex items-center gap-3 text-left">
             <div class="w-9 h-9 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"/>
-                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"/>
+                <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                <path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
               </svg>
             </div>
             <div>
@@ -505,12 +509,12 @@
             </div>
           </button>
 
-          <button type="button" onclick="sendCmd(0x03, '01', 'Headlight ON')" class="m3-tile p-3 flex items-center gap-3 text-left">
+          <button type="button" onclick="handleUserCommandAction(0x03, '01', 'Headlight ON', 'Фара включена')" class="m3-tile p-3 flex items-center gap-3 text-left">
             <div class="w-9 h-9 rounded-xl bg-[#FBBF24]/15 text-[#FBBF24] flex items-center justify-center shrink-0">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/>
-                <path d="M9 18h6"/>
-                <path d="M10 22h4"/>
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"></path>
+                <path d="M9 18h6"></path>
+                <path d="M10 22h4"></path>
               </svg>
             </div>
             <div>
@@ -519,13 +523,13 @@
             </div>
           </button>
 
-          <button type="button" onclick="sendCmd(0x03, '00', 'Headlight OFF')" class="m3-tile p-3 flex items-center gap-3 text-left">
+          <button type="button" onclick="handleUserCommandAction(0x03, '00', 'Headlight OFF', 'Фара выключена')" class="m3-tile p-3 flex items-center gap-3 text-left">
             <div class="w-9 h-9 rounded-xl bg-[#8E8A9E]/15 text-[#8E8A9E] flex items-center justify-center shrink-0">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="2" y1="2" x2="22" y2="22"/>
-                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 9.33 2.86"/>
-                <path d="M9 18h6"/>
-                <path d="M10 22h4"/>
+                <line x1="2" y1="2" x2="22" y2="22"></line>
+                <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 9.33 2.86"></path>
+                <path d="M9 18h6"></path>
+                <path d="M10 22h4"></path>
               </svg>
             </div>
             <div>
@@ -536,16 +540,14 @@
         </div>
       </div>
 
-      <!-- Блок Colour Light (IoT LED) с четким разделением превью, режимов и настроек -->
       <div class="m3-card">
         <div class="flex items-center justify-between mb-3">
           <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Colour light (IoT LED)</span>
           <span id="rgbReadout" class="font-mono-code text-[11px] text-[#8E8A9E]">RGB(155, 138, 251)</span>
         </div>
 
-        <!-- Отдельный контейнер живого превью подсветки -->
         <div class="bg-[#121117] p-3 rounded-2xl border border-[#2A2835] mb-3.5">
-          <div id="ledPreviewCanvas" class="w-full h-14 rounded-xl border border-white/15 mb-2.5 transition-none" style="background-color: #9B8AFB; box-shadow: 0 0 20px rgba(155, 138, 251, 0.45);"></div>
+          <div id="ledPreviewCanvas" class="w-full h-14 rounded-xl border border-white/15 mb-2.5 transition-none" style="background: rgb(155, 138, 251); box-shadow: rgba(155, 138, 251, 0.55) 0px 0px 20px;"></div>
           <div class="flex items-center justify-between gap-2">
             <div class="min-w-0">
               <div class="flex items-center gap-2">
@@ -554,16 +556,14 @@
               </div>
               <div id="ledSubStatus" class="text-[11px] text-[#8E8A9E] mt-0.5">Ровное свечение</div>
             </div>
-            <!-- Пресеты для обычных режимов -->
             <div id="solidPresets" class="flex gap-1.5 shrink-0">
-              <button type="button" onclick="setPresetColor(0, 175, 255)" class="w-6 h-6 rounded-full bg-[#00AFFF] border border-white/25" title="Lite Blue"></button>
-              <button type="button" onclick="setPresetColor(155, 138, 251)" class="w-6 h-6 rounded-full bg-[#9B8AFB] border border-white/25" title="Lavender"></button>
-              <button type="button" onclick="setPresetColor(74, 222, 128)" class="w-6 h-6 rounded-full bg-[#4ADE80] border border-white/25" title="Emerald"></button>
+              <button type="button" onclick="setPresetColor(0, 175, 255)" class="w-6 h-6 rounded-full bg-[#00AFFF] border border-white/25"></button>
+              <button type="button" onclick="setPresetColor(155, 138, 251)" class="w-6 h-6 rounded-full bg-[#9B8AFB] border border-white/25"></button>
+              <button type="button" onclick="setPresetColor(74, 222, 128)" class="w-6 h-6 rounded-full bg-[#4ADE80] border border-white/25"></button>
             </div>
           </div>
         </div>
 
-        <!-- Отдельная сетка 4 кнопок режимов (grid-cols-2 с нормальными отступами) -->
         <div class="mb-3.5">
           <div class="text-[11.5px] text-[#8E8A9E] mb-2">Режим свечения</div>
           <div class="grid grid-cols-2 gap-2">
@@ -574,28 +574,25 @@
           </div>
         </div>
 
-        <!-- Слайдеры R, G, B (активны для Solid / Breathe / Flash) -->
         <div id="rgbSlidersWrap" class="space-y-3 mb-3.5 bg-[#121117] p-3 rounded-2xl border border-[#2A2835]">
           <div class="flex items-center gap-3">
             <span class="font-mono-code text-[12px] font-bold text-[#F87171] w-3">R</span>
-            <input type="range" id="sliderR" class="rgb-slider" min="0" max="255" value="155" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #F87171);" />
+            <input type="range" id="sliderR" class="rgb-slider" min="0" max="255" value="155" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #F87171);">
             <span id="valR" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">155</span>
           </div>
           <div class="flex items-center gap-3">
             <span class="font-mono-code text-[12px] font-bold text-[#4ADE80] w-3">G</span>
-            <input type="range" id="sliderG" class="rgb-slider" min="0" max="255" value="138" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #4ADE80);" />
+            <input type="range" id="sliderG" class="rgb-slider" min="0" max="255" value="138" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #4ADE80);">
             <span id="valG" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">138</span>
           </div>
           <div class="flex items-center gap-3">
             <span class="font-mono-code text-[12px] font-bold text-[#60A5FA] w-3">B</span>
-            <input type="range" id="sliderB" class="rgb-slider" min="0" max="255" value="251" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #60A5FA);" />
+            <input type="range" id="sliderB" class="rgb-slider" min="0" max="255" value="251" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #60A5FA);">
             <span id="valB" class="font-mono-code text-[12px] text-[#8E8A9E] w-7 text-right">251</span>
           </div>
         </div>
 
-        <!-- Отдельная панель настроек Gradient -->
         <div id="gradientControlsWrap" class="hidden mb-3.5 p-3.5 rounded-2xl bg-[#121117] border border-[#2A2835] space-y-3.5">
-          <!-- Пресеты градиентов -->
           <div>
             <div class="text-[11px] font-medium text-[#8E8A9E] mb-2">Пресеты градиента</div>
             <div class="grid grid-cols-4 gap-1.5">
@@ -606,17 +603,16 @@
             </div>
           </div>
 
-          <!-- Два селектора цвета -->
           <div class="grid grid-cols-2 gap-2.5">
             <div class="flex items-center gap-2.5 bg-[#18171F] p-2.5 rounded-xl border border-[#2A2835]">
-              <input type="color" id="gradColor1" class="m3-color-picker" value="#9B8AFB" oninput="syncRgbUI()" />
+              <input type="color" id="gradColor1" class="m3-color-picker" value="#9B8AFB" oninput="syncRgbUI()">
               <div class="min-w-0">
                 <div class="text-[10.5px] text-[#8E8A9E]">Цвет 1</div>
                 <div id="gradHex1" class="font-mono-code text-[12px] font-semibold text-[#EFEDF6] truncate">#9B8AFB</div>
               </div>
             </div>
             <div class="flex items-center gap-2.5 bg-[#18171F] p-2.5 rounded-xl border border-[#2A2835]">
-              <input type="color" id="gradColor2" class="m3-color-picker" value="#00AFFF" oninput="syncRgbUI()" />
+              <input type="color" id="gradColor2" class="m3-color-picker" value="#00AFFF" oninput="syncRgbUI()">
               <div class="min-w-0">
                 <div class="text-[10.5px] text-[#8E8A9E]">Цвет 2</div>
                 <div id="gradHex2" class="font-mono-code text-[12px] font-semibold text-[#EFEDF6] truncate">#00AFFF</div>
@@ -624,7 +620,6 @@
             </div>
           </div>
 
-          <!-- Выбор эффекта градиента -->
           <div>
             <div class="text-[11px] text-[#8E8A9E] mb-2">Эффект градиента</div>
             <div class="grid grid-cols-2 gap-2">
@@ -635,57 +630,54 @@
             </div>
           </div>
 
-          <!-- Скорость -->
           <div>
             <div class="flex justify-between text-[11px] text-[#8E8A9E] mb-1.5">
               <span>Скорость анимации</span>
               <span id="gradSpeedLabel" class="font-mono-code text-[#EFEDF6]">5 / 10</span>
             </div>
-            <input type="range" id="gradSpeedSlider" class="rgb-slider" min="1" max="10" value="5" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #9B8AFB);" />
+            <input type="range" id="gradSpeedSlider" class="rgb-slider" min="1" max="10" value="5" oninput="syncRgbUI()" style="background: linear-gradient(90deg, #22202B, #9B8AFB);">
           </div>
 
-          <!-- Характер перехода -->
           <div class="flex items-center justify-between pt-2 border-t border-[#2A2835]">
             <span class="text-[11.5px] text-[#8E8A9E]">Характер перехода</span>
             <div class="flex gap-1.5 bg-[#18171F] p-1 rounded-xl border border-[#2A2835]">
-              <button type="button" id="gradTransSmooth" onclick="setGradTransition(false)" class="px-3 py-1 rounded-lg text-[11px] font-semibold bg-[#9B8AFB] text-[#12101C]">Плавный</button>
-              <button type="button" id="gradTransSharp" onclick="setGradTransition(true)" class="px-3 py-1 rounded-lg text-[11px] font-medium text-[#8E8A9E]">Резкий</button>
+              <button type="button" id="gradTransSmooth" onclick="setGradTransition(false)" class="px-3 py-1 rounded-lg text-[11px] font-semibold bg-[#9B8AFB] text-[#12101C]">Smooth</button>
+              <button type="button" id="gradTransSharp" onclick="setGradTransition(true)" class="px-3 py-1 rounded-lg text-[11px] font-medium text-[#8E8A9E]">Sharp</button>
             </div>
           </div>
         </div>
 
         <button type="button" onclick="applyColourCommand()" class="m3-btn-primary w-full py-3 text-[13.5px] flex items-center justify-center gap-2">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
-            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
-            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
-            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
-            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+            <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"></circle>
+            <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"></circle>
+            <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"></circle>
+            <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"></circle>
+            <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"></path>
           </svg>
           Apply colour
         </button>
       </div>
 
-      <!-- Питание ESC и SHFW Профили -->
       <div class="m3-card">
         <div class="flex items-center justify-between mb-2.5">
-          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Power & SHFW Profile</span>
+          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Power &amp; SHFW Profile</span>
           <span id="motionLockBadge" class="hidden text-[10.5px] font-medium px-2 py-0.5 rounded-full bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30">
-            Блок на ходу (&gt;0 км/ч)
+            Блок на ходу (&gt;0.5 км/ч)
           </span>
         </div>
         <div class="grid grid-cols-2 gap-2.5 mb-3">
-          <button type="button" onclick="confirmDangerAction('Питание ESC', 'Подать сигнал включения контроллера?', () => sendSignedCmd(0x02, '01', 'Power ON'))" class="py-3 px-3 rounded-2xl bg-[#4ADE80]/12 border border-[#4ADE80]/25 text-[#4ADE80] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
+          <button type="button" onclick="confirmDangerAction('Питание ESC', 'Подать сигнал включения контроллера?', () =&gt; handleUserCommandAction(0x02, '01', 'Power ON', 'Питание ESC включено'))" class="py-3 px-3 rounded-2xl bg-[#4ADE80]/12 border border-[#4ADE80]/25 text-[#4ADE80] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
-              <line x1="12" y1="2" x2="12" y2="12"/>
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+              <line x1="12" y1="2" x2="12" y2="12"></line>
             </svg>
             Power on
           </button>
-          <button type="button" onclick="confirmDangerAction('Выключение ESC', 'Отключить питание самоката? Убедись, что самокат стоит на месте.', () => sendSignedCmd(0x02, '00', 'Power OFF'))" class="py-3 px-3 rounded-2xl bg-[#F87171]/12 border border-[#F87171]/25 text-[#F87171] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
+          <button type="button" onclick="confirmDangerAction('Выключение ESC', 'Отключить питание самоката? Убедись, что самокат стоит на месте.', () =&gt; handleUserCommandAction(0x02, '00', 'Power OFF', 'Питание ESC выключено'))" class="py-3 px-3 rounded-2xl bg-[#F87171]/12 border border-[#F87171]/25 text-[#F87171] font-semibold text-[13.5px] flex items-center justify-center gap-2 active:scale-95 transition-transform">
             <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
-              <line x1="12" y1="2" x2="12" y2="12"/>
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+              <line x1="12" y1="2" x2="12" y2="12"></line>
             </svg>
             Power off
           </button>
@@ -700,7 +692,7 @@
             <div class="text-[12px] font-semibold text-[#EFEDF6]">Drive</div>
             <div class="text-[10px] text-[#8E8A9E]">25 km/h</div>
           </button>
-          <button type="button" id="btnProf3" onclick="confirmDangerAction('Профиль SHFW 35+', 'Активировать скоростной профиль 35+ км/ч?', () => setSpeedProfile(3, 'SHFW Sport 35+ km/h'))" class="m3-btn-tonal py-2.5 px-2 text-center">
+          <button type="button" id="btnProf3" onclick="confirmDangerAction('Профиль SHFW 35+', 'Активировать скоростной профиль 35+ км/ч?', () =&gt; setSpeedProfile(3, 'SHFW Sport 35+ km/h'))" class="m3-btn-tonal py-2.5 px-2 text-center">
             <div class="text-[12px] font-semibold">SHFW</div>
             <div class="text-[10px] opacity-80">35+ km/h</div>
           </button>
@@ -709,7 +701,6 @@
 
     </section>
 
-    <!-- ==================== ВКЛАДКА 2: TELEMETRY ==================== -->
     <section id="tab-telemetry" class="tab-pane">
 
       <div class="m3-card">
@@ -730,7 +721,7 @@
         <div class="m3-card !mb-0">
           <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
             <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg>
             </span>
             Speed
           </div>
@@ -740,7 +731,7 @@
         <div class="m3-card !mb-0">
           <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
             <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             </span>
             Est. Range
           </div>
@@ -750,7 +741,7 @@
         <div class="m3-card !mb-0">
           <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
             <span class="w-7 h-7 rounded-lg bg-[#FBBF24]/15 text-[#FBBF24] flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
             </span>
             Voltage
           </div>
@@ -760,7 +751,7 @@
         <div class="m3-card !mb-0">
           <div class="flex items-center gap-2 text-[#8E8A9E] text-[12px] mb-2">
             <span class="w-7 h-7 rounded-lg bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/></svg>
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line></svg>
             </span>
             Mode
           </div>
@@ -781,199 +772,55 @@
           <span class="text-[#8E8A9E]">Session trip</span>
           <span id="telTrip" class="font-mono-code font-medium text-[#EFEDF6]">4.82 km</span>
         </div>
-        <div class="flex justify-between py-2.5 text-[13.5px]">
-          <span class="text-[#8E8A9E]">IoT / ESC Firmware</span>
-          <span class="font-mono-code font-medium text-[#EFEDF6]">1.0.4-custom / SHFW</span>
+        <div class="flex justify-between items-center py-2.5 text-[13.5px] gap-2">
+          <span class="text-[#8E8A9E] shrink-0">IoT / ESC Firmware</span>
+          <span id="telFwVersion" class="font-mono-code font-medium text-[#8E8A9E] text-right truncate">Offline (N/A)</span>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-2.5">
-        <button type="button" onclick="sendCmd(0x31, '00', 'Refresh Telemetry')" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
+        <button type="button" onclick="refreshTelemetryAndFw()" class="m3-btn-tonal py-3 px-3 text-[13.5px] flex items-center justify-center gap-2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path><path d="M16 16h5v5"></path></svg>
           Refresh
         </button>
         <button type="button" id="demoSimBtn" onclick="toggleDemoSimulation()" class="m3-tile py-3 px-3 text-[13.5px] font-medium text-[#EFEDF6] flex items-center justify-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
           <span id="demoSimLabel">Demo Ride: OFF</span>
         </button>
       </div>
 
     </section>
 
-    <!-- ==================== ВКЛАДКА 3: IOT & BLE KEYS (ЗАПРИВАЧЕНО PIN 7527) ==================== -->
-    <section id="tab-iot" class="tab-pane">
-
-      <div class="m3-card">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Active BLE Auth Key</span>
-          <span class="font-mono-code text-[11px] text-[#9B8AFB]">8-BYTE HEX</span>
-        </div>
-
-        <div class="relative mb-3">
-          <input type="password" id="activeKeyInput" maxlength="16" class="m3-input font-mono-code pr-10 tracking-wider uppercase" placeholder="1122334455667788" />
-          <button type="button" onclick="toggleKeyVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E8A9E] hover:text-[#EFEDF6] p-1" title="Show/Hide Key">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2.5 mb-2.5">
-          <button type="button" onclick="saveActiveKey(true)" class="m3-btn-tonal py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-            Save & Backup
-          </button>
-          <button type="button" onclick="sendHandshake()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            Verify Key
-          </button>
-        </div>
-
-        <div class="grid grid-cols-2 gap-2.5">
-          <button type="button" onclick="document.getElementById('keyFileInput').click()" class="m3-tile py-2.5 px-3 text-[12.5px] font-medium text-[#C8BFFD] flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-            Load (.mkey / .txt)
-          </button>
-          <button type="button" onclick="exportCurrentKeyFile()" class="m3-tile py-2.5 px-3 text-[12.5px] font-medium text-[#8E8A9E] hover:text-[#EFEDF6] flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            Export .mkey
-          </button>
-        </div>
-      </div>
-
-      <!-- Смена ключа на трекере -->
-      <div class="m3-card">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Rotate Key on Molniya IoT</span>
-          <span class="font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#9B8AFB]/15 text-[#C8BFFD]">AUTO .MKEY</span>
-        </div>
-        <input type="text" id="newKeyInput" maxlength="16" class="m3-input font-mono-code mb-3 tracking-wider uppercase" placeholder="AABBCCDDEEFF0011" />
-
-        <div class="grid grid-cols-2 gap-2.5 mb-2.5">
-          <button type="button" onclick="generateRandomKey()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/></svg>
-            Generate
-          </button>
-          <button type="button" onclick="confirmDangerAction('Смена ключа 0xC4', 'Перезаписать 64-битный BLE-ключ в памяти трекера и сохранить резервную копию .mkey на устройство?', writeNewKeyToIoT)" class="m3-btn-primary py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
-            Write Key (0xC4)
-          </button>
-        </div>
-        <p class="text-[11px] text-[#8E8A9E] leading-relaxed">
-          При изменении ключа резервная копия <span class="font-mono-code text-[#C8BFFD]">molniya_key_YYYY-MM-DD.mkey</span> автоматически скачивается на устройство.
-        </p>
-      </div>
-
-      <!-- OTA Firmware Update с проверкой 0xE9 -->
-      <div class="m3-card">
-        <div class="flex items-center justify-between mb-2.5">
-          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">OTA Firmware Update</span>
-          <span id="otaValidationBadge" class="text-[10.5px] font-mono-code px-2 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]">Magic 0xE9</span>
-        </div>
-        <div class="flex items-center gap-3 p-3 rounded-2xl bg-[#121117] border border-[#2A2835] mb-3">
-          <div class="w-10 h-10 rounded-xl bg-[#9B8AFB]/15 text-[#9B8AFB] flex items-center justify-center shrink-0">
-            <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          </div>
-          <div class="min-w-0 flex-1">
-            <div id="otaFileName" class="text-[13px] font-medium text-[#EFEDF6] truncate">No firmware selected</div>
-            <div id="otaFileSize" class="text-[11px] text-[#8E8A9E]">Pick a compiled ESP32 .bin image</div>
-          </div>
-        </div>
-
-        <input type="file" id="otaFileInput" accept=".bin" class="hidden" onchange="handleOtaFileSelect(event)" />
-        <div class="grid grid-cols-2 gap-2.5">
-          <button type="button" onclick="document.getElementById('otaFileInput').click()" class="m3-tile py-2.5 px-3 text-[13px] font-medium flex items-center justify-center gap-1.5">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-            Choose .bin
-          </button>
-          <button type="button" id="btnFlashOta" onclick="confirmDangerAction('OTA Прошивка', 'Начать обновление прошивки ESP32 по воздуху? Не отключай питание до перезагрузки.', startOtaFlash)" class="m3-btn-tonal py-2.5 px-3 text-[13px] flex items-center justify-center gap-1.5" disabled>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-            Flash OTA
-          </button>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- ==================== ВКЛАДКА 4: CONSOLE & LOGS (ЗАПРИВАЧЕНО PIN 7527) ==================== -->
-    <section id="tab-console" class="tab-pane">
-
-      <div class="m3-card">
-        <div class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider mb-2.5">Custom Command</div>
-        <div class="grid grid-cols-3 gap-2 mb-2.5">
-          <div>
-            <label class="block text-[10.5px] text-[#8E8A9E] mb-1">Command (Hex)</label>
-            <input type="text" id="cmdOpcodeInput" class="m3-input font-mono-code text-center uppercase" value="31" maxlength="2" />
-          </div>
-          <div class="col-span-2">
-            <label class="block text-[10.5px] text-[#8E8A9E] mb-1">Payload (Hex)</label>
-            <input type="text" id="cmdPayloadInput" class="m3-input font-mono-code uppercase" value="00" placeholder="01 02..." />
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-1.5 mb-3">
-          <button type="button" onclick="fillOpcode('01', '01')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x01 Unlock</button>
-          <button type="button" onclick="fillOpcode('05', '01')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x05 Cover</button>
-          <button type="button" onclick="fillOpcode('30', '9B8AFB00')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x30 RGB</button>
-          <button type="button" onclick="fillOpcode('32', '9B8AFB00AFFF000500')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x32 Grad</button>
-          <button type="button" onclick="fillOpcode('31', '00')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0x31 Info</button>
-          <button type="button" onclick="fillOpcode('C0', '********')" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] font-mono-code text-[#C8BFFD] border border-[#2A2835]">0xC0 Auth</button>
-        </div>
-
-        <button type="button" onclick="confirmDangerAction('Отправка HEX', 'Отправить произвольный пакет в BLE-канал модуля?', sendManualCommand)" class="m3-btn-primary w-full py-2.5 text-[13.5px] flex items-center justify-center gap-2">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-          Send command
-        </button>
-      </div>
-
-      <div class="m3-card">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-[12px] font-medium text-[#8E8A9E] uppercase tracking-wider">Session Log</span>
-          <div class="flex items-center gap-1.5">
-            <button type="button" onclick="copyAllLogs()" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] text-[#EFEDF6] border border-[#2A2835]">Copy</button>
-            <button type="button" onclick="clearAllLogs()" class="px-2.5 py-1 rounded-lg bg-[#22202B] text-[11px] text-[#F87171] border border-[#2A2835]">Clear</button>
-          </div>
-        </div>
-
-        <div class="flex gap-1.5 mb-2.5 overflow-x-auto pb-1">
-          <button type="button" onclick="setLogFilter('ALL', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#9B8AFB] text-[#12101C]">All</button>
-          <button type="button" onclick="setLogFilter('BLE', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">BLE / Auth</button>
-          <button type="button" onclick="setLogFilter('IO', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">TX / RX</button>
-          <button type="button" onclick="setLogFilter('BTN', this)" class="log-filter-btn px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#22202B] text-[#8E8A9E]">Buttons</button>
-        </div>
-
-        <div id="terminalOutput" class="terminal-box font-mono-code"></div>
-      </div>
-
-    </section>
+    <div id="vaultMountTarget"></div>
 
   </main>
 
-  <!-- Нижняя панель навигации Material You -->
   <nav class="fixed bottom-0 left-0 right-0 z-40 bg-[#18171F]/95 backdrop-blur-md border-t border-[#2A2835] px-2 py-1.5">
     <div class="max-w-md mx-auto grid grid-cols-4 gap-1">
-      <button type="button" onclick="requestTabSwitch('control', 'Control by @Sirn8ki', this)" class="nav-btn active flex flex-col items-center justify-center py-1 text-[#9B8AFB]">
-        <div class="nav-pill px-4 py-1 rounded-full bg-[#9B8AFB]/16 mb-0.5 transition-colors">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      <button type="button" onclick="requestTabSwitch('control', 'Control by @Sirn8ki', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
+        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
         </div>
         <span class="text-[11px] font-semibold">Control</span>
       </button>
 
       <button type="button" onclick="requestTabSwitch('telemetry', 'Telemetry', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
         <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 14l4-4"></path><path d="M3.34 19a10 10 0 1 1 17.32 0"></path></svg>
         </div>
         <span class="text-[11px] font-medium">Telemetry</span>
       </button>
 
-      <button type="button" onclick="requestTabSwitch('iot', 'IoT & Keys', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
-        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+      <button type="button" onclick="requestTabSwitch('iot', 'IoT Admin &amp; HKDF', this)" class="nav-btn flex flex-col items-center justify-center py-1 active text-[#9B8AFB]">
+        <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors bg-[#9B8AFB]/16">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"></path><path d="M1.42 9a16 16 0 0 1 21.16 0"></path><path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path><line x1="12" y1="20" x2="12.01" y2="20"></line></svg>
         </div>
         <span id="navIotLabel" class="text-[11px] font-medium">IoT 🔒</span>
       </button>
 
-      <button type="button" onclick="requestTabSwitch('console', 'Console', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
+      <button type="button" onclick="requestTabSwitch('console', 'Admin Console', this)" class="nav-btn flex flex-col items-center justify-center py-1 text-[#8E8A9E]">
         <div class="nav-pill px-4 py-1 rounded-full mb-0.5 transition-colors">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" y1="19" x2="20" y2="19"></line></svg>
         </div>
         <span id="navConsoleLabel" class="text-[11px] font-medium">Console 🔒</span>
       </button>
@@ -981,36 +828,228 @@
   </nav>
 
   <script>
-    // =========================================================================
-    // 1. БЕЗОТКАЗНАЯ ОБФУСЦИРОВАННАЯ ПРОВЕРКА PIN-КОДА (7527)
-    // '7'(55)^0x5A=109, '5'(53)^0x5A=111, '2'(50)^0x5A=104, '7'(55)^0x5A=109
-    // =========================================================================
-    const _PIN_MASK = 0x5A;
-    const _PIN_ENC = [109, 111, 104, 109];
-    let _isPinVerified = false;
+    const VaultCrypto = (() => {
+      let unlocked = false;
+      let sealedBundle = null;
+      let decryptedPayloadCache = null;
 
-    function _verifySecurePin(rawVal) {
-      const clean = String(rawVal || '').trim();
-      if (clean.length !== _PIN_ENC.length) return false;
-      for (let i = 0; i < _PIN_ENC.length; i++) {
-        if ((clean.charCodeAt(i) ^ _PIN_MASK) !== _PIN_ENC[i]) {
-          return false;
+      const STORAGE_ATTEMPTS = 'molniya_sec_attempts_v9';
+      const STORAGE_LOCK_UNTIL = 'molniya_sec_lock_until_v9';
+
+      function getLockRemainingSec() {
+        const until = parseInt(localStorage.getItem(STORAGE_LOCK_UNTIL) || '0', 10);
+        const diff = Math.ceil((until - Date.now()) / 1000);
+        return diff > 0 ? diff : 0;
+      }
+
+      function registerFailedAttempt() {
+        const count = parseInt(localStorage.getItem(STORAGE_ATTEMPTS) || '0', 10) + 1;
+        localStorage.setItem(STORAGE_ATTEMPTS, String(count));
+        if (count >= 5) {
+          localStorage.setItem(STORAGE_LOCK_UNTIL, String(Date.now() + 120000));
+        } else if (count >= 3) {
+          localStorage.setItem(STORAGE_LOCK_UNTIL, String(Date.now() + 30000));
+        }
+        return count;
+      }
+
+      function resetFailedAttempts() {
+        localStorage.removeItem(STORAGE_ATTEMPTS);
+        localStorage.removeItem(STORAGE_LOCK_UNTIL);
+      }
+
+      function b64ToBytes(b64) {
+        const bin = atob(b64);
+        const out = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+        return out;
+      }
+
+      function bytesToB64(bytes) {
+        let bin = '';
+        const arr = new Uint8Array(bytes);
+        for (let i = 0; i < arr.length; i++) bin += String.fromCharCode(arr[i]);
+        return btoa(bin);
+      }
+
+      async function deriveAesGcmKey(passStr, saltBytes, iterations, usages) {
+        const baseKey = await crypto.subtle.importKey(
+          'raw',
+          new TextEncoder().encode(passStr),
+          'PBKDF2',
+          false,
+          ['deriveKey']
+        );
+        return crypto.subtle.deriveKey(
+          {
+            name: 'PBKDF2',
+            salt: saltBytes,
+            iterations: iterations,
+            hash: 'SHA-256'
+          },
+          baseKey,
+          { name: 'AES-GCM', length: 256 },
+          false,
+          usages
+        );
+      }
+
+      let _rawVaultParts = null;
+
+      async function initVault() {
+        if (window.__MOLNIYA_AES_VAULT__) {
+          sealedBundle = window.__MOLNIYA_AES_VAULT__;
+          _rawVaultParts = null;
+          return;
+        }
+
+        throw new Error('Vault payload missing');
+      }
+
+      async function verifyAndDecrypt(rawPass) {
+        const lockSec = getLockRemainingSec();
+        if (lockSec > 0) {
+          return { ok: false, locked: true, remaining: lockSec };
+        }
+
+        const cleanPass = String(rawPass || '').trim();
+        if (cleanPass.length < 12) {
+          const attempts = registerFailedAttempt();
+          return { ok: false, attempts, remaining: getLockRemainingSec() };
+        }
+
+        if (!sealedBundle) {
+          await initVault();
+        }
+
+        try {
+          const saltBytes = b64ToBytes(sealedBundle.s);
+          const ivBytes = b64ToBytes(sealedBundle.i);
+          const cipherBytes = b64ToBytes(sealedBundle.c);
+          const aesKey = await deriveAesGcmKey(cleanPass, saltBytes, sealedBundle.iter || 180000, ['decrypt']);
+
+          const plainBuf = await crypto.subtle.decrypt(
+            { name: 'AES-GCM', iv: ivBytes },
+            aesKey,
+            cipherBytes
+          );
+
+          const htmlPayload = new TextDecoder().decode(plainBuf);
+          decryptedPayloadCache = htmlPayload;
+          resetFailedAttempts();
+          mountDecryptedVault(htmlPayload);
+          return { ok: true };
+        } catch (err) {
+          const attempts = registerFailedAttempt();
+          return { ok: false, attempts, remaining: getLockRemainingSec() };
         }
       }
-      return true;
-    }
 
-    // Удаление всех замочков после успешного ввода PIN
-    function unlockAllPadlocksUI() {
-      const iotLbl = document.getElementById('navIotLabel');
-      const consoleLbl = document.getElementById('navConsoleLabel');
-      if (iotLbl) iotLbl.textContent = 'IoT';
-      if (consoleLbl) consoleLbl.textContent = 'Console';
-    }
+      function mountDecryptedVault(htmlMarkup) {
+        if (unlocked) return;
+        const mountTarget = document.getElementById('vaultMountTarget');
+        mountTarget.innerHTML = htmlMarkup;
+        unlocked = true;
 
-    // =========================================================================
-    // 2. СОСТОЯНИЕ И КОНСТАНТЫ BLE
-    // =========================================================================
+        const devInp = document.getElementById('deviceIdInput');
+        if (devInp && connectedDeviceIdHex) {
+          devInp.value = connectedDeviceIdHex;
+        }
+
+        const iotLbl = document.getElementById('navIotLabel');
+        const consoleLbl = document.getElementById('navConsoleLabel');
+        if (iotLbl) iotLbl.textContent = 'IoT';
+        if (consoleLbl) consoleLbl.textContent = 'Console';
+
+        renderLogs();
+      }
+
+      async function exportEncryptedBuild() {
+        if (!unlocked || !decryptedPayloadCache) {
+          showToast('Сначала разблокируй хранилище');
+          return;
+        }
+        const newPass = (document.getElementById('newCustomPassInput')?.value || '').trim();
+        if (newPass.length < 14) {
+          showToast('Мастер-фраза должна быть не короче 14 символов');
+          return;
+        }
+
+        try {
+          const freshSalt = crypto.getRandomValues(new Uint8Array(16));
+          const freshIv = crypto.getRandomValues(new Uint8Array(12));
+          const iterations = 180000;
+
+          const newAesKey = await deriveAesGcmKey(newPass, freshSalt, iterations, ['encrypt']);
+          const cipherBuf = await crypto.subtle.encrypt(
+            { name: 'AES-GCM', iv: freshIv },
+            newAesKey,
+            new TextEncoder().encode(decryptedPayloadCache)
+          );
+
+          const blobObj = {
+            iter: iterations,
+            s: bytesToB64(freshSalt),
+            i: bytesToB64(freshIv),
+            c: bytesToB64(cipherBuf)
+          };
+
+          const clonedDoc = document.documentElement.cloneNode(true);
+          const clonedMount = clonedDoc.querySelector('#vaultMountTarget');
+          if (clonedMount) clonedMount.innerHTML = '';
+
+          const clonedModal = clonedDoc.querySelector('#securityModal');
+          if (clonedModal) clonedModal.classList.add('hidden');
+
+          const clonedQuickModal = clonedDoc.querySelector('#quickKeyModal');
+          if (clonedQuickModal) clonedQuickModal.classList.add('hidden');
+
+          const clonedIotLbl = clonedDoc.querySelector('#navIotLabel');
+          if (clonedIotLbl) clonedIotLbl.textContent = 'IoT 🔒';
+
+          const clonedConsoleLbl = clonedDoc.querySelector('#navConsoleLabel');
+          if (clonedConsoleLbl) clonedConsoleLbl.textContent = 'Console 🔒';
+
+          clonedDoc.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+          const ctrlPane = clonedDoc.querySelector('#tab-control');
+          if (ctrlPane) ctrlPane.classList.add('active');
+
+          const existingBlobScript = clonedDoc.querySelector('#aesVaultPayloadScript');
+          if (existingBlobScript) existingBlobScript.remove();
+
+          const payloadScript = document.createElement('script');
+          payloadScript.id = 'aesVaultPayloadScript';
+          payloadScript.textContent = `window.__MOLNIYA_AES_VAULT__ = ${JSON.stringify(blobObj)};`;
+          clonedDoc.querySelector('head').appendChild(payloadScript);
+
+          const finalHtml = '<!DOCTYPE html>\n' + clonedDoc.outerHTML;
+          const fileBlob = new Blob([finalHtml], { type: 'text/html;charset=utf-8' });
+          const url = URL.createObjectURL(fileBlob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'index.html';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1500);
+
+          addLog('BLE', 'AUTH', 'Exported clean commercial index.html build.');
+          showToast('Новый зашифрованный index.html скачан');
+        } catch (err) {
+          addLog('BLE', 'ERR', `Export encryption failed: ${err.message}`);
+          showToast('Ошибка шифрования при экспорте');
+        }
+      }
+
+      return {
+        initVault,
+        isUnlocked: () => unlocked,
+        getLockRemainingSec,
+        verifyAndDecrypt,
+        exportEncryptedBuild
+      };
+    })();
+
     const NUS_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
     const NUS_RX_CHAR_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
     const NUS_TX_CHAR_UUID = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
@@ -1018,47 +1057,138 @@
     let bleDevice = null;
     let rxCharacteristic = null;
     let txCharacteristic = null;
-    let currentLedMode = 0;      // 0: Solid, 1: Breathe, 2: Flash, 3: Gradient
-    let currentGradSubMode = 0;  // 0: Flow, 1: Breathe, 2: Flash, 3: Strobe
-    let isGradSharp = false;     // false: Плавный, true: Резкий
-    let pendingKeyRotation = null;
+    let currentLedMode = 0;
+    let currentGradSubMode = 0;
+    let isGradSharp = false;
+    let pendingUserKeyProvision = null;
     let selectedOtaFile = null;
     let selectedOtaBuffer = null;
+    let selectedOtaSha256Hex = null;
     let demoInterval = null;
     let currentLogFilter = 'ALL';
     let currentScooterSpeed = 0.0;
-    let activeSessionNonce = null;
+
+    let activeSessionNonceHex = null;
+    let connectedDeviceIdHex = '';
     const sessionLogs = [];
 
-    // Инициализация сохранённого ключа
-    const storedKey = localStorage.getItem('molniya_ble_key') || '1122334455667788';
-    document.getElementById('activeKeyInput').value = storedKey;
+    let userBleKey128 = (localStorage.getItem('molniya_user_key_128') || '').trim().toUpperCase();
+    let derivedDeviceAdminKey128 = '';
 
-    // Всплывающий тост
+    function extractHex128(rawText) {
+      const str = String(rawText || '');
+      const tagged = str.match(/MOLNIYA-BLE-KEY-V\d+:\s*([0-9A-Fa-f\s-]{32,64})/i);
+      const source = tagged ? tagged[1] : str;
+      const hexOnly = source.replace(/[^0-9A-Fa-f]/g, '').toUpperCase();
+      return hexOnly.slice(0, 32);
+    }
+
+    function hasValidUserKey() {
+      return /^[0-9A-F]{32}$/.test(userBleKey128);
+    }
+
+    function hasValidDerivedAdminKey() {
+      return /^[0-9A-F]{32}$/.test(derivedDeviceAdminKey128);
+    }
+
+    function setUserBleKey128(newHex) {
+      const clean = extractHex128(newHex);
+      if (/^[0-9A-F]{32}$/.test(clean)) {
+        userBleKey128 = clean;
+        localStorage.setItem('molniya_user_key_128', clean);
+      } else {
+        userBleKey128 = '';
+        localStorage.removeItem('molniya_user_key_128');
+      }
+      refreshKeyStatusBadge();
+    }
+
+    function refreshKeyStatusBadge() {
+      const pill = document.getElementById('keyLoadedPill');
+      if (!pill) return;
+      if (hasValidUserKey()) {
+        pill.textContent = 'Key: 128-bit Loaded';
+        pill.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30';
+      } else {
+        pill.textContent = 'Key: Not Set';
+        pill.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#FBBF24]/15 text-[#FBBF24] border border-[#FBBF24]/30';
+      }
+    }
+
+    async function recomputeHkdfAdminKey() {
+      const devIdInput = document.getElementById('deviceIdInput');
+      const secretInput = document.getElementById('masterSecretInput');
+      const previewEl = document.getElementById('derivedAdminPreview');
+      if (!devIdInput || !secretInput || !previewEl) return;
+
+      const devIdClean = devIdInput.value.replace(/[^0-9a-fA-F]/g, '').toUpperCase();
+      const masterSecret = secretInput.value;
+
+      if (devIdClean.length < 4 || masterSecret.length < 8) {
+        derivedDeviceAdminKey128 = '';
+        previewEl.textContent = 'Awaiting Secret + ID';
+        previewEl.className = 'font-mono-code text-[11px] text-[#8E8A9E]';
+        return;
+      }
+
+      try {
+        const ikm = await crypto.subtle.importKey(
+          'raw',
+          new TextEncoder().encode(masterSecret),
+          'HKDF',
+          false,
+          ['deriveBits']
+        );
+
+        const derivedBits = await crypto.subtle.deriveBits(
+          {
+            name: 'HKDF',
+            hash: 'SHA-256',
+            salt: new TextEncoder().encode('molniya-hkdf-salt-v1'),
+            info: new TextEncoder().encode(`molniya-admin-key:${devIdClean}`)
+          },
+          ikm,
+          128
+        );
+
+        derivedDeviceAdminKey128 = Array.from(new Uint8Array(derivedBits))
+          .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+          .join('');
+
+        previewEl.textContent = `${derivedDeviceAdminKey128.slice(0, 4)}••••••••${derivedDeviceAdminKey128.slice(-4)} (Ready)`;
+        previewEl.className = 'font-mono-code text-[11px] text-[#4ADE80]';
+      } catch (err) {
+        derivedDeviceAdminKey128 = '';
+        previewEl.textContent = 'HKDF Error';
+      }
+    }
+
     let toastTimer = null;
     function showToast(text) {
       const el = document.getElementById('toastBanner');
       el.textContent = text;
       el.classList.add('show');
       clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 2500);
     }
 
-    // =========================================================================
-    // 3. ЛОГИРОВАНИЕ И МАСКИРОВКА КЛЮЧА
-    // =========================================================================
     function maskSensitiveData(str) {
       let out = String(str);
-      const keys = [
-        (document.getElementById('activeKeyInput')?.value || '').trim().toUpperCase(),
+      const secrets = [
+        userBleKey128,
+        derivedDeviceAdminKey128,
         (document.getElementById('quickKeyField')?.value || '').trim().toUpperCase(),
-        (document.getElementById('newKeyInput')?.value || '').trim().toUpperCase()
+        (document.getElementById('newUserKeyInput')?.value || '').trim().toUpperCase(),
+        (document.getElementById('masterSecretInput')?.value || '').trim()
       ];
-      keys.forEach(k => {
-        if (k && k.length >= 8) {
-          const spaced = k.match(/.{1,2}/g)?.join(' ') || k;
-          out = out.replace(new RegExp(k, 'gi'), '[********]');
-          out = out.replace(new RegExp(spaced, 'gi'), '[** ** ** ** ** ** ** **]');
+      secrets.forEach(s => {
+        if (s && s.length >= 6) {
+          out = out.split(s).join('[REDACTED_SECRET]');
+          if (/^[0-9A-F]{16,}$/i.test(s)) {
+            const spaced = s.match(/.{1,2}/g)?.join(' ') || s;
+            out = out.replace(new RegExp(s, 'gi'), '[128-BIT_KEY_MASKED]');
+            out = out.replace(new RegExp(spaced, 'gi'), '[128-BIT_KEY_MASKED]');
+          }
         }
       });
       return out;
@@ -1078,6 +1208,7 @@
 
     function renderLogs() {
       const box = document.getElementById('terminalOutput');
+      if (!box) return;
       const colorMap = {
         TX: 'text-[#60A5FA]',
         RX: 'text-[#4ADE80]',
@@ -1128,19 +1259,27 @@
       addLog('SYS', 'SYS', 'Console buffer cleared.');
     }
 
-    // =========================================================================
-    // 4. МОДАЛЬНЫЕ ОКНА: ПОДТВЕРЖДЕНИЕ, PIN И БЫСТРЫЙ КЛЮЧ
-    // =========================================================================
+    let lockoutTimerId = null;
+
     function closeSecurityModal() {
+      clearInterval(lockoutTimerId);
       document.getElementById('securityModal').classList.add('hidden');
-      document.getElementById('modalPinField').value = '';
+      document.getElementById('modalPassField').value = '';
+      document.getElementById('modalPassField').classList.add('key-masked-field');
+      document.getElementById('lockoutNotice').classList.add('hidden');
+    }
+
+    function toggleModalPassVisibility() {
+      document.getElementById('modalPassField').classList.toggle('key-masked-field');
     }
 
     function confirmDangerAction(title, desc, onConfirm) {
       const modal = document.getElementById('securityModal');
       document.getElementById('modalTitle').textContent = title;
       document.getElementById('modalDesc').textContent = desc;
-      document.getElementById('modalPinWrap').classList.add('hidden');
+      document.getElementById('modalPassWrap').classList.add('hidden');
+      document.getElementById('modalConfirmAction').disabled = false;
+      document.getElementById('modalConfirmAction').textContent = 'Подтвердить';
       modal.classList.remove('hidden');
 
       document.getElementById('modalConfirmAction').onclick = () => {
@@ -1149,40 +1288,76 @@
       };
     }
 
-    // Навигация с проверкой PIN на вкладки 'iot' и 'console'
+    function updateLockoutBanner() {
+      const notice = document.getElementById('lockoutNotice');
+      const confirmBtn = document.getElementById('modalConfirmAction');
+      const passInput = document.getElementById('modalPassField');
+      const rem = VaultCrypto.getLockRemainingSec();
+
+      if (rem > 0) {
+        notice.textContent = `Слишком много неверных попыток. Повтор через ${rem} сек.`;
+        notice.classList.remove('hidden');
+        confirmBtn.disabled = true;
+        passInput.disabled = true;
+      } else {
+        notice.classList.add('hidden');
+        confirmBtn.disabled = false;
+        passInput.disabled = false;
+      }
+    }
+
     function requestTabSwitch(tabId, title, btnEl) {
       const protectedTabs = ['iot', 'console'];
-      if (protectedTabs.includes(tabId) && !_isPinVerified) {
+      if (protectedTabs.includes(tabId) && !VaultCrypto.isUnlocked()) {
         const modal = document.getElementById('securityModal');
-        const pinInput = document.getElementById('modalPinField');
-        document.getElementById('modalTitle').textContent = 'Раздел запривачен';
-        document.getElementById('modalDesc').textContent = 'Введи 4-значный PIN-код для доступа к настройкам IoT, OTA и консоли:';
-        document.getElementById('modalPinWrap').classList.remove('hidden');
-        pinInput.value = '';
-        modal.classList.remove('hidden');
-        setTimeout(() => pinInput.focus(), 60);
+        const passInput = document.getElementById('modalPassField');
+        const confirmBtn = document.getElementById('modalConfirmAction');
 
-        const submitPin = () => {
-          if (_verifySecurePin(pinInput.value)) {
-            _isPinVerified = true;
-            unlockAllPadlocksUI();
+        document.getElementById('modalTitle').textContent = 'Инженерный доступ';
+        document.getElementById('modalDesc').textContent = 'Введи мастер-фразу для расшифровки AES-GCM-256 хранилища:';
+        document.getElementById('modalPassWrap').classList.remove('hidden');
+        passInput.value = '';
+        passInput.classList.add('key-masked-field');
+        confirmBtn.textContent = 'Расшифровать';
+        modal.classList.remove('hidden');
+
+        updateLockoutBanner();
+        clearInterval(lockoutTimerId);
+        lockoutTimerId = setInterval(updateLockoutBanner, 500);
+        setTimeout(() => { if (!passInput.disabled) passInput.focus(); }, 60);
+
+        const submitPassphrase = async () => {
+          if (VaultCrypto.getLockRemainingSec() > 0) return;
+          confirmBtn.disabled = true;
+          confirmBtn.textContent = 'PBKDF2...';
+
+          const res = await VaultCrypto.verifyAndDecrypt(passInput.value);
+          confirmBtn.textContent = 'Расшифровать';
+
+          if (res.ok) {
             closeSecurityModal();
             applyTabSwitch(tabId, title, btnEl);
-            addLog('BLE', 'AUTH', 'PIN verified — IoT & Console unlocked for session.');
-            showToast('Доступ разблокирован');
+            addLog('BLE', 'AUTH', 'AES-GCM-256 engineering vault unlocked.');
+            showToast('Хранилище расшифровано');
           } else {
-            addLog('BLE', 'ERR', 'Invalid PIN attempt blocked.');
-            showToast('Неверный PIN-код');
-            pinInput.value = '';
-            pinInput.focus();
+            addLog('BLE', 'ERR', 'Invalid master passphrase attempt.');
+            passInput.value = '';
+            updateLockoutBanner();
+            if (res.remaining > 0) {
+              showToast(`Блокировка на ${res.remaining} сек.`);
+            } else {
+              confirmBtn.disabled = false;
+              passInput.focus();
+              showToast('Неверная мастер-фраза');
+            }
           }
         };
 
-        document.getElementById('modalConfirmAction').onclick = submitPin;
-        pinInput.onkeydown = (e) => {
+        confirmBtn.onclick = submitPassphrase;
+        passInput.onkeydown = (e) => {
           if (e.key === 'Enter') {
             e.preventDefault();
-            submitPin();
+            submitPassphrase();
           }
         };
         return;
@@ -1191,8 +1366,11 @@
     }
 
     function applyTabSwitch(tabId, title, btnEl) {
+      const targetPane = document.getElementById('tab-' + tabId);
+      if (!targetPane) return;
+
       document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-      document.getElementById('tab-' + tabId).classList.add('active');
+      targetPane.classList.add('active');
       document.getElementById('pageTitle').textContent = title;
 
       document.querySelectorAll('.nav-btn').forEach(b => {
@@ -1206,12 +1384,46 @@
       btnEl.querySelector('.nav-pill').classList.add('bg-[#9B8AFB]/16');
     }
 
-    // Быстрое окно ключа на главной вкладке Control (без PIN)
+    function sanitizeQuickKeyInput() {
+      const field = document.getElementById('quickKeyField');
+      const counter = document.getElementById('quickKeyCounter');
+      if (!field) return;
+      const clean = extractHex128(field.value);
+      if (field.value !== clean) {
+        field.value = clean;
+      }
+      if (counter) {
+        counter.textContent = `${clean.length} / 32 HEX`;
+        counter.className = clean.length === 32
+          ? 'font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30'
+          : 'font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#22202B] text-[#9B8AFB] border border-[#2A2835]';
+      }
+    }
+
+    async function pasteQuickKeyFromClipboard() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const clip = await navigator.clipboard.readText();
+          const field = document.getElementById('quickKeyField');
+          field.value = extractHex128(clip);
+          sanitizeQuickKeyInput();
+          if (field.value.length === 32) {
+            showToast('32 HEX символа вставлены из буфера');
+          } else {
+            showToast('В буфере не найдено 32 HEX символа');
+          }
+        }
+      } catch (e) {
+        document.getElementById('quickKeyField').focus();
+        showToast('Нажми «Вставить» в поле ввода');
+      }
+    }
+
     function openQuickKeyModal() {
-      const currentVal = document.getElementById('activeKeyInput').value.trim().toUpperCase();
       const quickField = document.getElementById('quickKeyField');
-      quickField.value = currentVal;
-      quickField.type = 'password';
+      quickField.value = userBleKey128;
+      quickField.classList.remove('key-masked-field');
+      sanitizeQuickKeyInput();
       document.getElementById('quickKeyModal').classList.remove('hidden');
       setTimeout(() => quickField.focus(), 60);
     }
@@ -1220,30 +1432,25 @@
       document.getElementById('quickKeyModal').classList.add('hidden');
     }
 
-    function toggleQuickKeyVisibility() {
-      const inp = document.getElementById('quickKeyField');
-      inp.type = inp.type === 'password' ? 'text' : 'password';
+    function toggleQuickKeyMask() {
+      document.getElementById('quickKeyField').classList.toggle('key-masked-field');
     }
 
     async function applyQuickKey() {
-      const val = document.getElementById('quickKeyField').value.trim().toUpperCase();
-      if (!/^[0-9A-F]{16}$/.test(val)) {
-        showToast('Ключ должен содержать ровно 16 HEX-символов');
+      const clean = extractHex128(document.getElementById('quickKeyField').value);
+      if (!/^[0-9A-F]{32}$/.test(clean)) {
+        showToast('User Key должен содержать ровно 32 HEX-символа');
         return;
       }
-      document.getElementById('activeKeyInput').value = val;
-      localStorage.setItem('molniya_ble_key', val);
+      setUserBleKey128(clean);
       closeQuickKeyModal();
-      addLog('BLE', 'AUTH', 'Active BLE key updated via Quick Modal [********]');
-      showToast('Ключ сохранён');
+      addLog('BLE', 'AUTH', '128-bit User BLE key loaded into memory.');
+      showToast('128-битный User Key сохранён');
       if (rxCharacteristic) {
-        await sendHandshake();
+        await initiateUserChallengeHandshake();
       }
     }
 
-    // =========================================================================
-    // 5. ПРОТОКОЛ ФРЕЙМОВ, ПОДПИСЬ REPLAY-АТАК И WEB BLUETOOTH
-    // =========================================================================
     function hexToBytes(hex) {
       const clean = hex.replace(/[^0-9a-fA-F]/g, '');
       const out = new Uint8Array(Math.floor(clean.length / 2));
@@ -1271,38 +1478,167 @@
       return frame;
     }
 
-    // Вычисление 4-байтной подписи (SHA-256 с fallback если crypto.subtle недоступен)
-    async function computeReplaySignature(opcode, payloadHex) {
-      const key = document.getElementById('activeKeyInput').value.trim().toUpperCase();
-      const nonce = activeSessionNonce || '00000000';
-      const raw = `${key}:${nonce}:${opcode.toString(16).padStart(2, '0').toUpperCase()}:${payloadHex.toUpperCase()}`;
+    async function computeHmac16Bytes(keyHex128, opcode, payloadHex = '') {
+      const keyBytes = hexToBytes(keyHex128);
+      if (keyBytes.length !== 16) {
+        throw new Error('Ключ должен быть ровно 128 бит (32 HEX символа)');
+      }
+      const nonceHex = activeSessionNonceHex || '0000000000000000';
+      const opHex = opcode.toString(16).padStart(2, '0').toUpperCase();
+      const messageBytes = hexToBytes(nonceHex + opHex + payloadHex);
 
-      if (window.crypto && window.crypto.subtle) {
-        try {
-          const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(raw));
-          return Array.from(new Uint8Array(buf).slice(0, 4))
-            .map(b => b.toString(16).padStart(2, '0').toUpperCase())
-            .join('');
-        } catch (e) {
-          // Fallback ниже
-        }
-      }
-      // Детерминированный 32-битный FNV-1a fallback
-      let h = 0x811c9dc5;
-      for (let i = 0; i < raw.length; i++) {
-        h ^= raw.charCodeAt(i);
-        h = Math.imul(h, 0x01000193);
-      }
-      return (h >>> 0).toString(16).padStart(8, '0').toUpperCase();
+      const cryptoKey = await crypto.subtle.importKey(
+        'raw',
+        keyBytes,
+        { name: 'HMAC', hash: 'SHA-256' },
+        false,
+        ['sign']
+      );
+
+      const macBuffer = await crypto.subtle.sign('HMAC', cryptoKey, messageBytes);
+      return Array.from(new Uint8Array(macBuffer).slice(0, 16))
+        .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+        .join('');
     }
 
-    async function sendSignedCmd(opcode, payloadHex, btnLabel = '') {
-      const sig = await computeReplaySignature(opcode, payloadHex);
-      await sendCmd(opcode, payloadHex + sig, `${btnLabel} [SIG:${sig}]`);
-      if (activeSessionNonce) {
-        activeSessionNonce = null;
-        document.getElementById('nonceBadgePill').textContent = 'Nonce: Used';
+    async function consumeNonceAndRequestNext() {
+      if (activeSessionNonceHex) {
+        activeSessionNonceHex = null;
+        const pill = document.getElementById('nonceBadgePill');
+        if (pill) pill.textContent = 'Nonce: Consumed';
       }
+      if (rxCharacteristic) {
+        await sendCmd(0xC1, '00', 'Request Next Challenge Nonce');
+      }
+    }
+
+    async function initiateUserChallengeHandshake() {
+      if (!hasValidUserKey()) {
+        openQuickKeyModal();
+        showToast('Сначала введи или загрузи 128-битный User Key');
+        return;
+      }
+      if (rxCharacteristic && !activeSessionNonceHex) {
+        addLog('BLE', 'AUTH', 'Requesting fresh 8-byte challenge nonce before 0xC0...');
+        await sendCmd(0xC1, '00', 'Get Challenge Nonce');
+        return;
+      }
+      try {
+        const challengeMac = await computeHmac16Bytes(userBleKey128, 0xC0, '');
+        addLog('BLE', 'AUTH', `Sending Zero-Key User Challenge-Response (0xC0) [HMAC:${challengeMac.slice(0, 8)}..]`);
+        await sendCmd(0xC0, challengeMac, 'User Challenge-Response (0xC0)');
+        await consumeNonceAndRequestNext();
+      } catch (err) {
+        addLog('BLE', 'ERR', `User Challenge error: ${err.message}`);
+        showToast(err.message);
+      }
+    }
+
+    async function initiateAdminChallengeHandshake() {
+      if (!hasValidDerivedAdminKey()) {
+        showToast('Введи Device ID и Master Admin Secret для расчёта HKDF-ключа');
+        return;
+      }
+      if (rxCharacteristic && !activeSessionNonceHex) {
+        addLog('BLE', 'AUTH', 'Requesting fresh 8-byte challenge nonce before 0xC2...');
+        await sendCmd(0xC1, '00', 'Get Challenge Nonce');
+        return;
+      }
+      try {
+        const challengeMac = await computeHmac16Bytes(derivedDeviceAdminKey128, 0xC2, '');
+        addLog('BLE', 'AUTH', `Sending Zero-Key Admin Challenge-Response (0xC2) [HMAC:${challengeMac.slice(0, 8)}..]`);
+        await sendCmd(0xC2, challengeMac, 'Admin Challenge-Response (0xC2)');
+        await consumeNonceAndRequestNext();
+      } catch (err) {
+        addLog('BLE', 'ERR', `Admin Challenge error: ${err.message}`);
+        showToast(err.message);
+      }
+    }
+
+    async function sendUserSignedCmd(opcode, payloadHex, btnLabel = '') {
+      if (!hasValidUserKey()) {
+        openQuickKeyModal();
+        showToast('Сначала введи или загрузи 128-битный User Key');
+        return false;
+      }
+      try {
+        const hmac16 = await computeHmac16Bytes(userBleKey128, opcode, payloadHex);
+        await sendCmd(opcode, payloadHex + hmac16, `${btnLabel} [HMAC128:${hmac16.slice(0, 8)}..]`);
+        await consumeNonceAndRequestNext();
+        return true;
+      } catch (err) {
+        addLog('BLE', 'ERR', `User HMAC sign error: ${err.message}`);
+        showToast(err.message);
+        return false;
+      }
+    }
+
+    async function handleUserCommandAction(opcode, payloadHex, logLabel, successToast) {
+      const ok = await sendUserSignedCmd(opcode, payloadHex, logLabel);
+      if (ok && successToast) {
+        showToast(successToast);
+      }
+      return ok;
+    }
+
+    async function sendAdminSignedCmd(opcode, payloadHex, btnLabel = '') {
+      if (!hasValidDerivedAdminKey()) {
+        showToast('Сначала вычисли HKDF Admin Key (Device ID + Master Secret)');
+        return false;
+      }
+      try {
+        const hmac16 = await computeHmac16Bytes(derivedDeviceAdminKey128, opcode, payloadHex);
+        await sendCmd(opcode, payloadHex + hmac16, `${btnLabel} [ADMIN-HMAC128:${hmac16.slice(0, 8)}..]`);
+        await consumeNonceAndRequestNext();
+        return true;
+      } catch (err) {
+        addLog('BLE', 'ERR', `Admin HMAC sign error: ${err.message}`);
+        showToast(err.message);
+        return false;
+      }
+    }
+
+    function setFirmwareDisplay(fwText, isLive = true) {
+      const el = document.getElementById('telFwVersion');
+      if (!el) return;
+      el.textContent = fwText;
+      el.className = isLive
+        ? 'font-mono-code font-medium text-[#EFEDF6] text-right truncate'
+        : 'font-mono-code font-medium text-[#8E8A9E] text-right truncate';
+    }
+
+    function parseFirmwarePayload(payloadBytes) {
+      if (!payloadBytes || payloadBytes.length === 0) return null;
+
+      const isPrintableAscii = payloadBytes.every(b => b >= 0x20 && b <= 0x7E);
+      if (isPrintableAscii && payloadBytes.length >= 4) {
+        return new TextDecoder().decode(payloadBytes).trim();
+      }
+
+      if (payloadBytes.length >= 6) {
+        const iotVer = `${payloadBytes[0]}.${payloadBytes[1]}.${payloadBytes[2]}`;
+        const escVer = `${payloadBytes[3]}.${payloadBytes[4]}.${payloadBytes[5]}`;
+        const typeCode = payloadBytes[6] ?? 0x01;
+        const typeMap = {
+          0x01: 'SHFW',
+          0x02: 'DRV Stock',
+          0x03: 'VESC',
+          0x04: 'Xiaogen'
+        };
+        const fwLabel = typeMap[typeCode] || `ESC(0x${typeCode.toString(16).toUpperCase()})`;
+        return `${iotVer}-iot / ${fwLabel} ${escVer}`;
+      }
+
+      if (payloadBytes.length >= 4) {
+        return `${payloadBytes[0]}.${payloadBytes[1]}-iot / ESC ${payloadBytes[2]}.${payloadBytes[3]}`;
+      }
+
+      return null;
+    }
+
+    async function refreshTelemetryAndFw() {
+      await sendCmd(0x31, '00', 'Refresh Telemetry');
+      await sendCmd(0x33, '00', 'Query Firmware Version (0x33)');
     }
 
     async function scanAndConnect() {
@@ -1343,8 +1679,9 @@
         txCharacteristic.addEventListener('characteristicvaluechanged', onBleNotification);
 
         updateConnectionUI(true, bleDevice.name || 'Molniya IoT');
-        addLog('BLE', 'BLE', 'Subscribed to TX notifications. Initiating key handshake...');
-        await sendHandshake();
+        setFirmwareDisplay('Reading BLE...', true);
+        addLog('BLE', 'BLE', 'Subscribed to TX notifications. Requesting 8-byte challenge nonce & DeviceID (0xC1)...');
+        await sendCmd(0xC1, '00', 'Request Challenge Nonce & DeviceID');
       } catch (err) {
         addLog('BLE', 'ERR', `BLE Scan/Connect aborted: ${err.message}`);
       }
@@ -1353,8 +1690,10 @@
     function onBleDisconnected() {
       rxCharacteristic = null;
       txCharacteristic = null;
-      activeSessionNonce = null;
+      activeSessionNonceHex = null;
+      connectedDeviceIdHex = '';
       updateConnectionUI(false, 'Molniya IoT Module');
+      setFirmwareDisplay('Offline (N/A)', false);
       addLog('BLE', 'ERR', 'BLE connection lost.');
       showToast('Соединение с трекером разорвано');
     }
@@ -1364,6 +1703,7 @@
       const dot = document.getElementById('connDot');
       const text = document.getElementById('connText');
       const rssi = document.getElementById('rssiIndicator');
+      const devBadge = document.getElementById('deviceIdBadge');
 
       document.getElementById('deviceTitle').textContent = name;
       if (isConnected) {
@@ -1378,8 +1718,14 @@
         text.textContent = 'Disconnected';
         rssi.classList.add('hidden');
         rssi.classList.remove('flex');
+        if (devBadge) devBadge.classList.add('hidden');
         document.getElementById('authStatusPill').textContent = 'Auth: Pending';
         document.getElementById('authStatusPill').className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]';
+        const adminPill = document.getElementById('adminAuthPill');
+        if (adminPill) {
+          adminPill.textContent = 'Admin: Standby';
+          adminPill.className = 'font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#22202B] text-[#8E8A9E] border border-[#2A2835]';
+        }
       }
     }
 
@@ -1401,51 +1747,103 @@
       }
     }
 
-    async function sendHandshake() {
-      const key = document.getElementById('activeKeyInput').value.trim().toUpperCase();
-      addLog('BLE', 'AUTH', 'Sending Masked Handshake Key [********]');
-      await sendCmd(0xC0, key, 'BLE Key Handshake');
+    function applyReceivedDeviceId(devIdHex) {
+      if (!devIdHex) return;
+      connectedDeviceIdHex = devIdHex;
+      const devBadge = document.getElementById('deviceIdBadge');
+      if (devBadge) {
+        devBadge.textContent = `ID: ${devIdHex}`;
+        devBadge.classList.remove('hidden');
+      }
+      const devInp = document.getElementById('deviceIdInput');
+      if (devInp && !devInp.value) {
+        devInp.value = devIdHex;
+        recomputeHkdfAdminKey();
+      }
     }
 
-    function onBleNotification(event) {
+    async function onBleNotification(event) {
       const data = new Uint8Array(event.target.value.buffer);
       addLog('IO', 'RX', `FRAME=[${bytesToHex(data)}]`);
       if (data.length < 5 || data[0] !== 0x5A || data[1] !== 0xA5) return;
 
       const opcode = data[3];
+      const payload = data.slice(4, data.length - 1);
+
+      if (opcode === 0xC1 && payload.length >= 8) {
+        const hadNonceBefore = Boolean(activeSessionNonceHex);
+        activeSessionNonceHex = Array.from(payload.slice(0, 8))
+          .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+          .join('');
+        document.getElementById('nonceBadgePill').textContent = `Nonce: ${activeSessionNonceHex.slice(0, 8)}..`;
+        addLog('BLE', 'AUTH', `Fresh 64-bit challenge nonce received: ${activeSessionNonceHex}`);
+
+        if (payload.length >= 14) {
+          const devIdHex = Array.from(payload.slice(8, 14))
+            .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+            .join('');
+          applyReceivedDeviceId(devIdHex);
+          addLog('BLE', 'BLE', `Target DeviceID identified: ${devIdHex}`);
+        }
+
+        const authPill = document.getElementById('authStatusPill');
+        if (!hadNonceBefore && authPill && authPill.textContent === 'Auth: Pending' && hasValidUserKey()) {
+          await initiateUserChallengeHandshake();
+        }
+      }
+
       if (opcode === 0xC0) {
         const verified = data[4] === 0x01;
         const badge = document.getElementById('authStatusPill');
         if (verified) {
-          badge.textContent = 'Auth: Verified';
+          badge.textContent = 'User Auth: Verified';
           badge.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#9B8AFB]/15 text-[#C8BFFD] border border-[#9B8AFB]/30';
-          if (data.length >= 9) {
-            activeSessionNonce = Array.from(data.slice(5, 9)).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-            document.getElementById('nonceBadgePill').textContent = `Nonce: ${activeSessionNonce}`;
-          }
-          addLog('BLE', 'AUTH', 'Handshake accepted by Molniya IoT.');
-          showToast('BLE-ключ подтверждён');
+          addLog('BLE', 'AUTH', 'User Challenge-Response verified by ESP32.');
+          showToast('Аутентификация пользователя пройдена');
+          await sendCmd(0x33, '00', 'Auto-Query Firmware Version');
+          await sendCmd(0x31, '00', 'Auto-Query Telemetry');
         } else {
-          badge.textContent = 'Auth: Key Rejected';
+          badge.textContent = 'User Auth: Rejected';
           badge.className = 'text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30';
-          addLog('BLE', 'ERR', 'Handshake rejected: invalid BLE key!');
-          showToast('Ошибка: неверный BLE-ключ');
+          addLog('BLE', 'ERR', 'User Challenge-Response rejected by ESP32!');
+          showToast('Ошибка: неверный User Key');
         }
       }
 
-      if (opcode === 0xC1 && data.length >= 8) {
-        activeSessionNonce = Array.from(data.slice(4, 8)).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-        document.getElementById('nonceBadgePill').textContent = `Nonce: ${activeSessionNonce}`;
-        addLog('BLE', 'AUTH', `Fresh anti-replay nonce received: ${activeSessionNonce}`);
+      if (opcode === 0xC2) {
+        const adminVerified = data[4] === 0x01;
+        const adminPill = document.getElementById('adminAuthPill');
+        if (adminVerified) {
+          if (adminPill) {
+            adminPill.textContent = 'Admin: Verified';
+            adminPill.className = 'font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30';
+          }
+          addLog('BLE', 'AUTH', 'HKDF Admin Challenge-Response accepted by ESP32.');
+          showToast('Admin-сессия подтверждена');
+        } else {
+          if (adminPill) {
+            adminPill.textContent = 'Admin: Rejected';
+            adminPill.className = 'font-mono-code text-[10.5px] px-2 py-0.5 rounded-full bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30';
+          }
+          addLog('BLE', 'ERR', 'Admin Challenge-Response rejected!');
+          showToast('Ошибка: неверный HKDF Admin Key');
+        }
       }
 
-      if (opcode === 0xC4 && data[4] === 0x01 && pendingKeyRotation) {
-        document.getElementById('activeKeyInput').value = pendingKeyRotation;
-        localStorage.setItem('molniya_ble_key', pendingKeyRotation);
-        downloadKeyBackupFile(pendingKeyRotation);
-        addLog('BLE', 'AUTH', 'New BLE key written to IoT flash, saved & downloaded as .mkey [********]');
-        showToast('Новый ключ записан и сохранён в .mkey');
-        pendingKeyRotation = null;
+      if (opcode === 0xC4 && data[4] === 0x01 && pendingUserKeyProvision) {
+        setUserBleKey128(pendingUserKeyProvision);
+        downloadKeyBackupFile(pendingUserKeyProvision);
+        addLog('BLE', 'AUTH', 'New 128-bit User Key written to ESP32 NVS & downloaded (.mkey).');
+        showToast('Новый User Key записан и скачан (.mkey)');
+        pendingUserKeyProvision = null;
+      }
+
+      if (opcode === 0x33) {
+        const fwStr = parseFirmwarePayload(payload);
+        if (fwStr) {
+          setFirmwareDisplay(fwStr, true);
+          addLog('BLE', 'BLE', `Firmware version updated from BLE: ${fwStr}`);
+        }
       }
 
       if (opcode === 0x31 && data.length >= 11) {
@@ -1455,26 +1853,33 @@
         const range = data[9] / 10;
         const mode = data[10];
         updateTelemetryUI(bat, speed, volt, range, mode);
+
+        if (payload.length >= 11) {
+          const fwTail = parseFirmwarePayload(payload.slice(7));
+          if (fwTail) setFirmwareDisplay(fwTail, true);
+        }
       }
     }
 
-    // Немедленные команды Unlock, Lock и Battery cover (без подтверждений)
-    function handleUnlock() {
-      sendSignedCmd(0x01, '01', 'Unlock Scooter');
+    async function handleUnlock() {
+      const ok = await sendUserSignedCmd(0x01, '01', 'Unlock Scooter');
+      if (!ok) return;
       document.getElementById('telLockState').textContent = 'Unlocked';
       document.getElementById('telLockState').className = 'font-semibold text-[#4ADE80]';
       showToast('Команда Unlock отправлена');
     }
 
-    function handleLock() {
-      sendSignedCmd(0x01, '00', 'Lock Scooter');
+    async function handleLock() {
+      const ok = await sendUserSignedCmd(0x01, '00', 'Lock Scooter');
+      if (!ok) return;
       document.getElementById('telLockState').textContent = 'Locked';
       document.getElementById('telLockState').className = 'font-semibold text-[#F87171]';
       showToast('Команда Lock отправлена');
     }
 
-    function openBatteryCover() {
-      sendSignedCmd(0x05, '01', 'Open Deck Solenoid (Battery Cover)');
+    async function openBatteryCover() {
+      const ok = await sendUserSignedCmd(0x05, '01', 'Open Deck Solenoid (Battery Cover)');
+      if (!ok) return;
       const pill = document.getElementById('deckLatchPill');
       const telDeck = document.getElementById('telDeckState');
       pill.textContent = 'Deck: Pulse 350ms';
@@ -1488,21 +1893,18 @@
       }, 2200);
     }
 
-    // Физическая блокировка смены профиля на ходу (> 0.5 км/ч)
-    function setSpeedProfile(modeNum, label) {
+    async function setSpeedProfile(modeNum, label) {
       if (currentScooterSpeed > 0.5) {
         addLog('BLE', 'ERR', `Safety block: profile change rejected at ${currentScooterSpeed.toFixed(1)} km/h`);
         showToast('Нельзя менять профиль на ходу!');
         return;
       }
-      sendSignedCmd(0x06, modeNum.toString(16).padStart(2, '0'), `Switch Profile: ${label}`);
+      const ok = await sendUserSignedCmd(0x06, modeNum.toString(16).padStart(2, '0'), `Switch Profile: ${label}`);
+      if (!ok) return;
       document.getElementById('telModeLabel').textContent = modeNum === 3 ? 'SHFW 3' : `Mode ${modeNum}`;
       showToast(`Профиль: ${label}`);
     }
 
-    // =========================================================================
-    // 6. ПОДСВЕТКА IOT LED И ИСПРАВЛЕННЫЙ РЕНДЕР ГРАДИЕНТОВ (RAF)
-    // =========================================================================
     function hexToRgbObj(hex) {
       const clean = String(hex || '#000000').replace('#', '');
       return {
@@ -1547,7 +1949,7 @@
         ];
         document.getElementById('rgbReadout').textContent = `GRAD(${subNames[currentGradSubMode]}, SPD=${speedVal})`;
         document.getElementById('hexValueLabel').textContent = `${c1Hex} → ${c2Hex}`;
-        subStatusEl.textContent = `${subDesc[currentGradSubMode]} • ${isGradSharp ? 'Резко' : 'Плавно'}`;
+        subStatusEl.textContent = `${subDesc[currentGradSubMode]} • ${isGradSharp ? 'Sharp' : 'Smooth'}`;
       } else {
         const modeDesc = ['Ровное свечение', 'Плавное затухание и разгорание', 'Стробоскопическое мигание'];
         document.getElementById('rgbReadout').textContent = `RGB(${r}, ${g}, ${b})`;
@@ -1624,7 +2026,6 @@
       addLog('BTN', 'BTN', `Gradient Transition -> ${sharp ? 'Sharp' : 'Smooth'}`);
     }
 
-    // Независимый 60 FPS рендер живого превью подсветки
     function startLedPreviewLoop() {
       const previewEl = document.getElementById('ledPreviewCanvas');
       function renderFrame(now) {
@@ -1636,24 +2037,20 @@
           let alpha = 1.0;
 
           if (currentLedMode === 1) {
-            // Breathe
             alpha = 0.14 + 0.86 * (0.5 + 0.5 * Math.sin(tSec * 2.8));
           } else if (currentLedMode === 2) {
-            // Flash
             alpha = Math.sin(tSec * 11.0) > 0 ? 1.0 : 0.08;
           }
 
           previewEl.style.background = `rgba(${r}, ${g}, ${b}, ${alpha.toFixed(2)})`;
           previewEl.style.boxShadow = `0 0 ${Math.round(20 * alpha)}px rgba(${r}, ${g}, ${b}, ${(0.55 * alpha).toFixed(2)})`;
         } else {
-          // Режим Gradient
           const c1 = hexToRgbObj(document.getElementById('gradColor1').value);
           const c2 = hexToRgbObj(document.getElementById('gradColor2').value);
           const speed = parseInt(document.getElementById('gradSpeedSlider').value) || 5;
           const freq = 0.25 + speed * 0.22;
           const phase = (tSec * freq) % 1;
 
-          // Интерполяция между Цветом 1 и Цветом 2
           let mix = isGradSharp
             ? (phase < 0.5 ? 0.0 : 1.0)
             : (0.5 - 0.5 * Math.cos(phase * Math.PI * 2));
@@ -1661,15 +2058,12 @@
           let brightness = 1.0;
 
           if (currentGradSubMode === 1) {
-            // Breathe + Gradient
             brightness = 0.16 + 0.84 * (0.5 + 0.5 * Math.sin(tSec * (1.4 + speed * 0.35)));
           } else if (currentGradSubMode === 2) {
-            // Flash: поочерёдное мигание Цветом 1 и Цветом 2
             mix = phase < 0.5 ? 0.0 : 1.0;
             const halfPhase = (phase % 0.5) * 2;
             brightness = halfPhase < 0.55 ? 1.0 : 0.08;
           } else if (currentGradSubMode === 3) {
-            // Strobe: двойные вспышки каждого цвета
             mix = phase < 0.5 ? 0.0 : 1.0;
             const halfPhase = (phase % 0.5) * 2;
             brightness = (halfPhase < 0.22 || (halfPhase > 0.42 && halfPhase < 0.64)) ? 1.0 : 0.06;
@@ -1686,7 +2080,7 @@
       requestAnimationFrame(renderFrame);
     }
 
-    function applyColourCommand() {
+    async function applyColourCommand() {
       if (currentLedMode === 3) {
         const c1 = document.getElementById('gradColor1').value.replace('#', '').toUpperCase();
         const c2 = document.getElementById('gradColor2').value.replace('#', '').toUpperCase();
@@ -1694,58 +2088,56 @@
         const spdHex = parseInt(document.getElementById('gradSpeedSlider').value).toString(16).padStart(2, '0');
         const trnHex = isGradSharp ? '01' : '00';
         const payload = `${c1}${c2}${subHex}${spdHex}${trnHex}`.toUpperCase();
-        sendCmd(0x32, payload, `Apply Gradient (#${c1} -> #${c2}, sub=${currentGradSubMode}, spd=${spdHex})`);
-        showToast('Градиент подсветки применён');
+        const ok = await sendUserSignedCmd(0x32, payload, `Apply Gradient (#${c1} -> #${c2}, sub=${currentGradSubMode}, spd=${spdHex})`);
+        if (ok) showToast('Градиент подсветки применён');
       } else {
         const r = parseInt(document.getElementById('sliderR').value).toString(16).padStart(2, '0');
         const g = parseInt(document.getElementById('sliderG').value).toString(16).padStart(2, '0');
         const b = parseInt(document.getElementById('sliderB').value).toString(16).padStart(2, '0');
         const m = currentLedMode.toString(16).padStart(2, '0');
         const payload = `${r}${g}${b}${m}`.toUpperCase();
-        sendCmd(0x30, payload, `Apply IoT RGB (#${r}${g}${b}, mode=${currentLedMode})`);
-        showToast(`Цвет #${r}${g}${b} применён`);
+        const ok = await sendUserSignedCmd(0x30, payload, `Apply IoT RGB (#${r}${g}${b}, mode=${currentLedMode})`);
+        if (ok) showToast(`Цвет #${r}${g}${b} применён`);
       }
     }
 
-    // =========================================================================
-    // 7. УПРАВЛЕНИЕ КЛЮЧАМИ (.MKEY / .TXT / .HEX) И АВТОСОХРАНЕНИЕ
-    // =========================================================================
-    function toggleKeyVisibility() {
-      const inp = document.getElementById('activeKeyInput');
-      inp.type = inp.type === 'password' ? 'text' : 'password';
+    function toggleMasterSecretVisibility() {
+      const inp = document.getElementById('masterSecretInput');
+      if (inp) inp.classList.toggle('key-masked-field');
     }
 
-    function downloadKeyBackupFile(hexKey) {
-      const cleanHex = String(hexKey || '').trim().toUpperCase();
-      if (!/^[0-9A-F]{16}$/.test(cleanHex)) return;
+    function downloadKeyBackupFile(hexKey128) {
+      const cleanHex = String(hexKey128 || '').trim().toUpperCase();
+      if (!/^[0-9A-F]{32}$/.test(cleanHex)) return;
 
       const dateStr = new Date().toISOString().slice(0, 10);
+      const devSuffix = connectedDeviceIdHex ? `_${connectedDeviceIdHex}` : '';
       const fileContent = [
-        `MOLNIYA-BLE-KEY-V1:${cleanHex}`,
-        `# Molniya IoT 64-bit BLE Auth Key`,
-        `# Created: ${new Date().toISOString()}`
+        `MOLNIYA-BLE-KEY-V2:${cleanHex}`,
+        `DEVICE-ID:${connectedDeviceIdHex || 'UNBOUND'}`,
+        `ISSUED:${new Date().toISOString()}`
       ].join('\n');
 
       const blob = new Blob([fileContent], { type: 'text/plain;charset=utf-8' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `molniya_key_${dateStr}.mkey`;
+      a.download = `molniya_key128${devSuffix}_${dateStr}.mkey`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     }
 
-    function exportCurrentKeyFile() {
-      const val = document.getElementById('activeKeyInput').value.trim().toUpperCase();
-      if (!/^[0-9A-F]{16}$/.test(val)) {
-        showToast('Ключ должен содержать 16 HEX-символов');
+    function exportUserKeyFile() {
+      const fieldVal = extractHex128(document.getElementById('quickKeyField')?.value || userBleKey128);
+      if (!/^[0-9A-F]{32}$/.test(fieldVal)) {
+        showToast('Ключ должен содержать 32 HEX-символа');
         return;
       }
-      downloadKeyBackupFile(val);
-      addLog('BLE', 'AUTH', 'Exported BLE key backup file (.mkey) [********]');
-      showToast('Файл ключа .mkey сохранён');
+      downloadKeyBackupFile(fieldVal);
+      addLog('BLE', 'AUTH', 'Exported 128-bit User BLE key backup (.mkey).');
+      showToast('Файл ключа .mkey сохранён локально');
     }
 
     async function handleKeyFileImport(event) {
@@ -1755,84 +2147,59 @@
 
       try {
         const text = await file.text();
-        let extractedHex = null;
+        const extractedHex = extractHex128(text);
 
-        const sigMatch = text.match(/MOLNIYA-BLE-KEY-V1:\s*([0-9A-Fa-f]{16})/i);
-        if (sigMatch) {
-          extractedHex = sigMatch[1].toUpperCase();
-        } else {
-          const fallbackMatch = text.match(/\b([0-9A-Fa-f]{16})\b/);
-          if (fallbackMatch) {
-            extractedHex = fallbackMatch[1].toUpperCase();
-          }
-        }
-
-        if (!extractedHex) {
-          addLog('BLE', 'ERR', `Key import failed: no valid 16-char HEX key found in "${file.name}"`);
-          showToast('Ошибка: в файле не найден 8-байтный HEX-ключ');
+        if (!/^[0-9A-F]{32}$/.test(extractedHex)) {
+          addLog('BLE', 'ERR', `Key import failed: no valid 128-bit key in "${file.name}"`);
+          showToast('Ошибка: в файле не найден 32-значный HEX-ключ');
           return;
         }
 
-        document.getElementById('activeKeyInput').value = extractedHex;
+        setUserBleKey128(extractedHex);
         const quickField = document.getElementById('quickKeyField');
-        if (quickField) quickField.value = extractedHex;
-        localStorage.setItem('molniya_ble_key', extractedHex);
+        if (quickField) {
+          quickField.value = extractedHex;
+          sanitizeQuickKeyInput();
+        }
 
-        addLog('BLE', 'AUTH', `Loaded BLE key from "${file.name}" [********]`);
-        showToast(`Ключ загружен из ${file.name}`);
+        addLog('BLE', 'AUTH', `Loaded 128-bit User BLE key from "${file.name}".`);
+        showToast(`User Key загружен из ${file.name}`);
       } catch (err) {
         addLog('BLE', 'ERR', `Failed to read key file: ${err.message}`);
         showToast('Не удалось прочитать файл ключа');
       }
     }
 
-    function saveActiveKey(autoDownload = false) {
-      const val = document.getElementById('activeKeyInput').value.trim().toUpperCase();
-      if (!/^[0-9A-F]{16}$/.test(val)) {
-        showToast('Ключ должен содержать ровно 16 HEX-символов');
-        return;
-      }
-      localStorage.setItem('molniya_ble_key', val);
-      addLog('BLE', 'AUTH', 'Updated local BLE Auth Key in storage [********]');
-      if (autoDownload) {
-        downloadKeyBackupFile(val);
-        showToast('Ключ сохранён и скачан (.mkey)');
-      } else {
-        showToast('BLE-ключ сохранён в приложении');
-      }
-    }
-
-    function generateRandomKey() {
-      const bytes = new Uint8Array(8);
+    function generateRandomUserKey128() {
+      const bytes = new Uint8Array(16);
       crypto.getRandomValues(bytes);
       const hex = Array.from(bytes).map(b => b.toString(16).padStart(2, '0').toUpperCase()).join('');
-      document.getElementById('newKeyInput').value = hex;
-      addLog('BTN', 'BTN', 'Generated new random 64-bit BLE key.');
+      const inp = document.getElementById('newUserKeyInput');
+      if (inp) inp.value = hex;
+      addLog('BTN', 'BTN', 'Generated random 128-bit User BLE key.');
     }
 
-    function writeNewKeyToIoT() {
-      const newKey = document.getElementById('newKeyInput').value.trim().toUpperCase();
-      if (!/^[0-9A-F]{16}$/.test(newKey)) {
-        showToast('Введи корректный 16-значный HEX ключ');
+    async function writeNewUserKeyToIoT() {
+      const newKey = extractHex128(document.getElementById('newUserKeyInput')?.value || '');
+      if (!/^[0-9A-F]{32}$/.test(newKey)) {
+        showToast('Введи корректный 32-символьный HEX ключ');
         return;
       }
-      pendingKeyRotation = newKey;
-      sendCmd(0xC4, newKey, 'Write New BLE Key (0xC4)');
-      if (!rxCharacteristic) {
-        document.getElementById('activeKeyInput').value = newKey;
-        localStorage.setItem('molniya_ble_key', newKey);
+      pendingUserKeyProvision = newKey;
+      const ok = await sendAdminSignedCmd(0xC4, newKey, 'Provision 128-bit User Key (0xC4)');
+      if (!rxCharacteristic && ok) {
+        setUserBleKey128(newKey);
         downloadKeyBackupFile(newKey);
-        showToast('Офлайн: ключ обновлён и скачан (.mkey)');
+        showToast('Офлайн: 128-бит User Key сохранён и скачан (.mkey)');
       }
     }
 
-    // =========================================================================
-    // 8. ПРОВЕРКА ЗАГОЛОВКА 0xE9 И РАЗМЕРА .BIN ПЕРЕД OTA
-    // =========================================================================
     async function handleOtaFileSelect(e) {
       const file = e.target.files[0];
       const badge = document.getElementById('otaValidationBadge');
       const flashBtn = document.getElementById('btnFlashOta');
+      const shaRow = document.getElementById('otaSha256Row');
+      const shaText = document.getElementById('otaSha256Text');
       if (!file) return;
 
       const buf = await file.arrayBuffer();
@@ -1842,7 +2209,9 @@
       if (!file.name.toLowerCase().endsWith('.bin') || bytes.length < 10240 || bytes.length > 1900000) {
         selectedOtaFile = null;
         selectedOtaBuffer = null;
+        selectedOtaSha256Hex = null;
         flashBtn.disabled = true;
+        if (shaRow) shaRow.classList.add('hidden');
         badge.textContent = 'Invalid Size';
         badge.className = 'text-[10.5px] font-mono-code px-2 py-0.5 rounded-full bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30';
         document.getElementById('otaFileSize').textContent = 'Ошибка размера (10 КБ — 1.9 МБ) или расширения';
@@ -1854,7 +2223,9 @@
       if (bytes[0] !== 0xE9) {
         selectedOtaFile = null;
         selectedOtaBuffer = null;
+        selectedOtaSha256Hex = null;
         flashBtn.disabled = true;
+        if (shaRow) shaRow.classList.add('hidden');
         const magic = '0x' + bytes[0].toString(16).padStart(2, '0').toUpperCase();
         badge.textContent = `Bad Magic (${magic})`;
         badge.className = 'text-[10.5px] font-mono-code px-2 py-0.5 rounded-full bg-[#F87171]/15 text-[#F87171] border border-[#F87171]/30';
@@ -1864,43 +2235,54 @@
         return;
       }
 
+      const digestBuf = await crypto.subtle.digest('SHA-256', buf);
+      selectedOtaSha256Hex = Array.from(new Uint8Array(digestBuf))
+        .map(b => b.toString(16).padStart(2, '0').toUpperCase())
+        .join('');
+
       selectedOtaFile = file;
       selectedOtaBuffer = bytes;
       flashBtn.disabled = false;
-      badge.textContent = '0xE9 Valid ✓';
+      badge.textContent = '0xE9 + SHA256 ✓';
       badge.className = 'text-[10.5px] font-mono-code px-2 py-0.5 rounded-full bg-[#4ADE80]/15 text-[#4ADE80] border border-[#4ADE80]/30';
-      document.getElementById('otaFileSize').textContent = `${(file.size / 1024).toFixed(1)} KB • ESP32 Image Verified`;
-      addLog('BLE', 'BLE', `Verified OTA image: ${file.name} (${file.size} bytes, Magic=0xE9)`);
+      document.getElementById('otaFileSize').textContent = `${(file.size / 1024).toFixed(1)} KB • Ready for Secure Boot v2 OTA`;
+
+      if (shaRow && shaText) {
+        shaText.textContent = selectedOtaSha256Hex;
+        shaRow.classList.remove('hidden');
+      }
+
+      addLog('BLE', 'BLE', `Verified OTA image: ${file.name} (${file.size}B, SHA256=${selectedOtaSha256Hex.slice(0, 16)}..)`);
     }
 
-    function startOtaFlash() {
-      if (!selectedOtaFile || !selectedOtaBuffer) {
+    async function startOtaFlash() {
+      if (!selectedOtaFile || !selectedOtaBuffer || !selectedOtaSha256Hex) {
         showToast('Выбери валидный .bin файл прошивки');
         return;
       }
       const sizeHex = selectedOtaBuffer.length.toString(16).padStart(8, '0').toUpperCase();
-      addLog('BTN', 'BTN', `Initiating Safe OTA Flash for ${selectedOtaFile.name}`);
-      sendSignedCmd(0xC5, '01' + sizeHex, 'Safe OTA Start Request');
-      showToast('Запрос безопасной OTA-прошивки отправлен');
+      const otaManifestPayload = '01' + sizeHex + selectedOtaSha256Hex;
+      addLog('BTN', 'BTN', `Initiating Signed OTA Manifest (0xC5) for ${selectedOtaFile.name}`);
+      const ok = await sendAdminSignedCmd(0xC5, otaManifestPayload, 'Admin OTA Manifest + SHA-256 (0xC5)');
+      if (ok) showToast('Манифест OTA с SHA-256 образа отправлен');
     }
 
-    // =========================================================================
-    // 9. КОНСОЛЬ И ТЕЛЕМЕТРИЯ
-    // =========================================================================
     function fillOpcode(op, pl) {
-      document.getElementById('cmdOpcodeInput').value = op;
-      document.getElementById('cmdPayloadInput').value = pl === '********' ? document.getElementById('activeKeyInput').value : pl;
+      const opInp = document.getElementById('cmdOpcodeInput');
+      const plInp = document.getElementById('cmdPayloadInput');
+      if (opInp) opInp.value = op;
+      if (plInp) plInp.value = pl;
     }
 
-    function sendManualCommand() {
-      const opHex = document.getElementById('cmdOpcodeInput').value.trim();
-      const plHex = document.getElementById('cmdPayloadInput').value.trim();
+    async function sendManualAdminCommand() {
+      const opHex = (document.getElementById('cmdOpcodeInput')?.value || '').trim();
+      const plHex = (document.getElementById('cmdPayloadInput')?.value || '').trim();
       const op = parseInt(opHex, 16);
       if (isNaN(op)) {
         showToast('Некорректный HEX Opcode');
         return;
       }
-      sendCmd(op, plHex, `Manual Console Command (0x${opHex.toUpperCase()})`);
+      await sendAdminSignedCmd(op, plHex, `Admin Console HEX (0x${opHex.toUpperCase()})`);
     }
 
     function updateTelemetryUI(bat, speed, volt, range, mode) {
@@ -1927,10 +2309,31 @@
         label.textContent = 'Demo Ride: OFF';
         updateTelemetryUI(84, 0.0, 40.65, 34.2, 3);
         document.getElementById('telAmp').textContent = '0.0 A';
+        if (!rxCharacteristic) {
+          activeSessionNonceHex = null;
+          connectedDeviceIdHex = '';
+          document.getElementById('nonceBadgePill').textContent = 'Nonce: Awaiting';
+          const devBadge = document.getElementById('deviceIdBadge');
+          if (devBadge) devBadge.classList.add('hidden');
+          setFirmwareDisplay('Offline (N/A)', false);
+        } else {
+          setFirmwareDisplay('Reading BLE...', true);
+        }
         addLog('SYS', 'SYS', 'Demo telemetry stream stopped.');
       } else {
         label.textContent = 'Demo Ride: ON';
+        const simChallenge = buildFrame(0xC1, '7F3A91C044E21908A4CF1298E102');
+        activeSessionNonceHex = '7F3A91C044E21908';
+        document.getElementById('nonceBadgePill').textContent = 'Nonce: 7F3A91C0..';
+        applyReceivedDeviceId('A4CF1298E102');
+        addLog('IO', 'RX', `SIM_CHALLENGE [${bytesToHex(simChallenge)}] -> Nonce=7F3A91C044E21908 ID=A4CF1298E102`);
+
+        const simFwFrame = buildFrame(0x33, '02010003090101');
+        const fwStr = parseFirmwarePayload(simFwFrame.slice(4, simFwFrame.length - 1));
+        if (fwStr) setFirmwareDisplay(fwStr, true);
+        addLog('IO', 'RX', `SIM_FW_INFO [${bytesToHex(simFwFrame)}] -> ${fwStr}`);
         addLog('SYS', 'SYS', 'Started live SHFW 35 km/h demo telemetry simulation.');
+
         let tick = 0;
         demoInterval = setInterval(() => {
           tick++;
@@ -1946,11 +2349,12 @@
       }
     }
 
-    // Старт приложения
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
+      await VaultCrypto.initVault();
+      refreshKeyStatusBadge();
       syncRgbUI();
       startLedPreviewLoop();
-      addLog('SYS', 'SYS', 'Molniya IoT Control v2.6 ready. Web Bluetooth NUS initialized.');
+      addLog('SYS', 'SYS', 'Molniya IoT Control v5.1 ready.');
     });
   </script>
   <script>
@@ -1958,5 +2362,5 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   </script>
-</body>
-</html>
+
+</body></html>
